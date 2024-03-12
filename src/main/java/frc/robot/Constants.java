@@ -8,6 +8,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
+import java.io.File;
+
 import com.revrobotics.CANSparkBase.IdleMode;
 import edu.wpi.first.math.util.Units;
 
@@ -163,5 +165,31 @@ public final class Constants {
       120, //ID 15 - Blue Stage
       240  //ID 16 - Blue Stage
     };
+  }
+
+  public static final class OnboarderConstants {
+    public static final int kIntakeBeamDIO = 0;
+    public static final int kOutakeBeamDIO = 1;
+    public static final int konboardMotorcanID = 8;
+  }
+
+  public static final class ClimbConstants {
+    public static final int kClimbMotorID = 15;
+    public static final int kRestLimitDIO = 3;
+    public static final int kExtendLimitDIO = 2;
+  }
+    
+  public static final class NoteAcuatorConstants {
+    public static final int kEncoderADIO = 4;
+    public static final int kEncoderBDIO = 5;
+    public static final int kScissorLiftCanID = 11;
+    public static final int kAcuatorCanID = 13;
+    public static final int kRollerCanID = 12;
+    public static final int kScissorLimitDIO = 9;
+  }
+    
+  public static final class RecordPlaybackConstants {
+    public static final File kRecordDirectory = new File("/home/lvuser/Recordings");
+    public static final String kFileType = "txt";
   }
 }
