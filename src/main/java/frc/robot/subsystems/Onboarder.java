@@ -16,12 +16,10 @@ import frc.robot.Constants;
 
 public class Onboarder extends SubsystemBase {
   /** Creates a new Onboarder. */
-
-  private double speed = 0;
-
-  private DigitalInput kIntakeBeam = new DigitalInput(Constants.OnboarderConstants.kIntakeBeamDIO);
-  private DigitalInput kOutakeBeam = new DigitalInput(Constants.OnboarderConstants.kOutakeBeamDIO);
+  private DigitalInput bumperSensor = new DigitalInput(Constants.OnboarderConstants.kIntakeBeamDIO);
+  private DigitalInput shooterSensor = new DigitalInput(Constants.OnboarderConstants.kOutakeBeamDIO);
   private WPI_VictorSPX onboardMotor = new WPI_VictorSPX(Constants.OnboarderConstants.konboardMotorcanID);
+
   private final ShuffleboardTab tab;
   private final GenericEntry booleanbox;
   
@@ -30,26 +28,23 @@ public class Onboarder extends SubsystemBase {
     booleanbox = tab.add("Intake", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
   }
 
-  public boolean intake(){
-    return !this.kIntakeBeam.get();
+  public boolean getBumperSensor(){
+    return !this.bumperSensor.get();
   }
-  public boolean outTake(){
-    return !this.kOutakeBeam.get();
+  public boolean getShooterSensor(){
+    return !this.shooterSensor.get();
   }
 
-  public double getSpeed() {
-    return this.speed;
-  }
-  public void setSpeed(double speed) {
-    this.speed = -speed;
+  public void setOnboarder(double power) {
+    onboardMotor.set(ControlMode.PercentOutput, -power);
   }
 
   @Override
   public void periodic() {
-    booleanbox.setBoolean(!this.kIntakeBeam.get());
-    onboardMotor.set(ControlMode.PercentOutput, speed);
+    // This method will be called once per scheduler run
+    booleanbox.setBoolean(!this.bumperSensor.get());
+    
     // System.out.println("outake"+outTake());
     // System.out.println("intake"+intake());
-    // This method will be called once per scheduler run
   }
 }

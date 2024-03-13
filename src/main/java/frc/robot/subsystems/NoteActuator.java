@@ -8,78 +8,46 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class NoteActuator extends SubsystemBase {
   /** Creates a new NoteActuator. */
-  private boolean open = false;
-  private boolean actuated = false;
-  private double rollerSpeed = 0;
-  private double actuateSpeed = 0;
-  private double liftSpeed = 0;
-  private double lowerlimit = 0;
-  private double heightlimit = 0;
+  private double liftPower = 0;
   private Encoder encoder = new Encoder(Constants.NoteAcuatorConstants.kEncoderADIO, Constants.NoteAcuatorConstants.kEncoderBDIO);
   
-
-  //private WPI_TalonSRX scissorLift = new WPI_TalonSRX(Constants.NoteAcuatorConstants.kScissorLiftCanID);
   private WPI_TalonSRX liftMotor = new WPI_TalonSRX(Constants.NoteAcuatorConstants.kScissorLiftCanID);
   private WPI_TalonSRX actuator = new WPI_TalonSRX(Constants.NoteAcuatorConstants.kAcuatorCanID);
   private WPI_TalonSRX roller = new WPI_TalonSRX(Constants.NoteAcuatorConstants.kRollerCanID);
 
-  private DigitalInput ScissorExtendedLimit = new DigitalInput(Constants.NoteAcuatorConstants.kScissorLimitDIO);
-  //private DigitalInput actuatedPosition = new DigitalInput(9);
-
+  private DigitalInput ScissorLimitSensor = new DigitalInput(Constants.NoteAcuatorConstants.kScissorLimitDIO);
 
   public NoteActuator() {
     actuator.configContinuousCurrentLimit(10, 1); //prevents the motor from burning out from stalling
   }
 
   public void setRoller(double power) {
-    this.rollerSpeed = power;
+    roller.set(ControlMode.PercentOutput, power);
   }
 
-  public void actuate(double power) {
-    this.actuateSpeed = power;
+  public void setActuate(double power) {
+    actuator.set(ControlMode.PercentOutput, power);
   }
 
-  public void extendLift(double power) {
-    this.liftSpeed=power;
-    /* 
-    double AP = encoder.get();
-    if(0<power){
-      if(AP<heightlimit){
-        this.liftSpeed = power;
-      }else{
-        this.liftSpeed=0;
-      }
-    }else if(power<0){
-      if(lowerlimit<AP){
-        this.liftSpeed = power;
-      }else{
-        this.liftSpeed=0;
-      }
-    }else{
-        this.liftSpeed=0;
-    }
-    */
+  public void setLift(double power) {
+    // IF at limit and going up, stop.
+    if (getScissorLimitSensor() && power > 0) {
+      this.liftPower = 0;
+    } else {
+      this.liftPower = power;
+    } 
+
+    liftMotor.set(ControlMode.PercentOutput, this.liftPower);
   }
 
-  public double getRollerSpeed() {
-    return this.rollerSpeed;
-  }
-  public double getActuateSpeed() {
-    return this.actuateSpeed;
-  }
-  public double getLiftSpeed() {
-    return this.liftSpeed;
-  }
-
-  public boolean getScissorLimitSwitch() {
-    return this.ScissorExtendedLimit.get();
+  public boolean getScissorLimitSensor() {
+    return this.ScissorLimitSensor.get();
   }
 
   public void resetEncoder(){
@@ -89,12 +57,6 @@ public class NoteActuator extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    //open = this.openPosition.get();
-    //actuated = this.actuatedPosition.get();
-    //System.out.println("VOLTS: " + actuator.getMotorOutputVoltage());
-    System.out.println(encoder.get());
-    actuator.set(ControlMode.PercentOutput, this.actuateSpeed);
-    roller.set(ControlMode.PercentOutput, this.rollerSpeed);
-    liftMotor.set(ControlMode.PercentOutput, this.liftSpeed);
+    //System.out.println(encoder.get());
   }
 }

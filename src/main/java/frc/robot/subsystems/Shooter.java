@@ -7,32 +7,22 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
   /** Creates a new Shooter. */
-  private double topPower = 0;
-  private double bottomPower = 0;
-  private TalonFX topMotor;
-  private TalonFX bottomMotor;
+  private TalonFX topMotor = new TalonFX(Constants.ShooterConstants.kTopShooterCANID);
+  private TalonFX bottomMotor = new TalonFX(Constants.ShooterConstants.kBottomShooterCANID);
 
-  public Shooter() {
-    bottomMotor = new TalonFX(7);
-    topMotor = new TalonFX(6);
-  }
+  public Shooter() {}
 
-  public void shoot(double power) {
-    this.topPower = -power;
-    this.bottomPower = power;
-  }
-
-  public double getSpeed() {
-    return this.topPower;
+  public void setShooter(double power) {
+    this.topMotor.set(-power);
+    this.bottomMotor.set(power);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    this.topMotor.set(topPower);
-    this.bottomMotor.set(bottomPower);
   }
 }

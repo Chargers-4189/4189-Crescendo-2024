@@ -13,37 +13,36 @@ import frc.robot.Constants;
 
 public class Climb extends SubsystemBase {
   /** Creates a new Climb. */
-  private double speed = 0;
-  private boolean rest = false;
-  private boolean extended = false;
+  private double climbPower = 0;
 
-  private DigitalInput restPosition = new DigitalInput(Constants.ClimbConstants.kRestLimitID);
-  private DigitalInput extendPosition = new DigitalInput(Constants.ClimbConstants.kExtendLimitID);
-  private WPI_TalonSRX onboardMotor = new WPI_TalonSRX(Constants.ClimbConstants.kClimbMotorID);
+  private DigitalInput restPosition = new DigitalInput(Constants.ClimbConstants.kRestLimitDIO);
+  private DigitalInput extendPosition = new DigitalInput(Constants.ClimbConstants.kExtendLimitDIO);
+  private WPI_TalonSRX climbMotor = new WPI_TalonSRX(Constants.ClimbConstants.kClimbMotorID);
 
   public Climb() {}
 
-  public void setSpeed(double speed) {
-    this.speed = speed;
+  public void setClimb(double power) {
+    // STOP in the direction of sensor if detected
+    if (getRestSensor() && power < 0) {
+      climbPower = 0;
+    } else if (getExtendedSensor() && power > 0) {
+      climbPower = 0;
+    } else {
+      climbPower = power;
+    }
+
+    this.climbMotor.set(ControlMode.PercentOutput, climbPower);
   }
 
-  public boolean getRestPosition() {
-    return rest;
+  public boolean getRestSensor() {
+    return this.restPosition.get();
   }
-  public boolean getExtendedPosition() {
-    return extended;
+  public boolean getExtendedSensor() {
+    return this.extendPosition.get();
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    rest = this.restPosition.get();
-    extended = this.extendPosition.get();
-
-    //if (rest == true || extended == true) {
-   //   onboardMotor.set(ControlMode.PercentOutput, 0);
-   // } else {
-      onboardMotor.set(ControlMode.PercentOutput, speed);
-   // }
   }
 }
