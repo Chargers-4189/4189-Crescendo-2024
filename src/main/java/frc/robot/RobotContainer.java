@@ -8,6 +8,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.CancelAll;
 import frc.robot.commands.PrimeShooter;
 import frc.robot.commands.ShootNote;
 import frc.robot.commands.SwerveJoysticks;
@@ -56,6 +57,7 @@ public class RobotContainer {
   private final Shooter shooter = new Shooter();
 
   // The robot's commands
+  private CancelAll cancelAll;
   private final PrimeShooter primeShooter = new PrimeShooter(shooter, onboarder);
   private final ShootNote shootNote = new ShootNote(shooter, onboarder);
 
@@ -84,6 +86,10 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // OPERATOR BUTTONS
+    cancelAll = new CancelAll(m_robotDrive, onboarder, shooter, climb, ampSystem);
+    JoystickButton cancleAllSecondary = new JoystickButton(m_operatorController, 5);
+    cancleAllSecondary.onTrue(cancelAll);
+
     JoystickButton primeShooterButton = new JoystickButton(m_operatorController, Button.kA.value);
     JoystickButton shootButton = new JoystickButton(m_operatorController, Button.kX.value);
     primeShooterButton.onTrue(primeShooter);
