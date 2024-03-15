@@ -8,8 +8,15 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.PrimeShooter;
+import frc.robot.commands.ShootNote;
 import frc.robot.commands.SwerveJoysticks;
+import frc.robot.subsystems.AmpSystem;
+import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.NoteActuator;
+import frc.robot.subsystems.Onboarder;
+import frc.robot.subsystems.Shooter;
 
 import java.util.List;
 
@@ -23,10 +30,14 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -36,8 +47,17 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+  private final ShuffleboardTab autoTab = Shuffleboard.getTab("Autonomous");
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  private final Climb climb = new Climb();
+  private final AmpSystem ampSystem = new AmpSystem();
+  private final Onboarder onboarder = new Onboarder(autoTab);
+  private final Shooter shooter = new Shooter();
+
+  // The robot's commands
+  private final PrimeShooter primeShooter = new PrimeShooter(shooter, onboarder);
+  private final ShootNote shootNote = new ShootNote(shooter, onboarder);
 
   // The driver's controller
   XboxController m_operatorController = new XboxController(OIConstants.kDriverControllerPort);
@@ -63,6 +83,14 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    // OPERATOR BUTTONS
+    JoystickButton primeShooterButton = new JoystickButton(m_operatorController, Button.kA.value);
+    JoystickButton shootButton = new JoystickButton(m_operatorController, Button.kX.value);
+    primeShooterButton.onTrue(primeShooter);
+    shootButton.onTrue(shootNote);
+
+    // DRIVER BUTTONS
+
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
