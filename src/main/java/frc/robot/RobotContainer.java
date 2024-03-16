@@ -8,14 +8,15 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.AutoPrimeShooter;
+import frc.robot.commands.AutoShootNote;
 import frc.robot.commands.CancelAll;
-import frc.robot.commands.PrimeShooter;
-import frc.robot.commands.ShootNote;
+import frc.robot.commands.DriveOnboarder;
+import frc.robot.commands.DriveShooter;
 import frc.robot.commands.SwerveJoysticks;
 import frc.robot.subsystems.AmpSystem;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.NoteActuator;
 import frc.robot.subsystems.Onboarder;
 import frc.robot.subsystems.Shooter;
 
@@ -30,15 +31,11 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -49,6 +46,11 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   private final ShuffleboardTab autoTab = Shuffleboard.getTab("Autonomous");
+  // The driver's controller
+  private CommandXboxController m_operatorController = new CommandXboxController(OIConstants.kDriverControllerPort);
+  private Joystick leftStick = new Joystick(OperatorConstants.kDriverJoystickLeft);
+  private Joystick rightStick = new Joystick(OperatorConstants.kDriverJoystickRight);
+
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final Climb climb = new Climb();
@@ -58,13 +60,12 @@ public class RobotContainer {
 
   // The robot's commands
   private CancelAll cancelAll;
-  private final PrimeShooter primeShooter = new PrimeShooter(shooter, onboarder);
-  private final ShootNote shootNote = new ShootNote(shooter, onboarder);
+  private DriveShooter driveShooter = new DriveShooter(shooter);
+  private DriveOnboarder driveOnboarder = new DriveOnboarder(onboarder, m_operatorController);
 
-  // The driver's controller
-  XboxController m_operatorController = new XboxController(OIConstants.kDriverControllerPort);
-  private Joystick leftStick = new Joystick(OperatorConstants.kDriverJoystickLeft);
-  private Joystick rightStick = new Joystick(OperatorConstants.kDriverJoystickRight);
+  // Autonomous Commands
+  private final AutoPrimeShooter primeShooter = new AutoPrimeShooter(shooter, onboarder);
+  private final AutoShootNote shootNote = new AutoShootNote(shooter, onboarder);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -87,13 +88,14 @@ public class RobotContainer {
   private void configureBindings() {
     // OPERATOR BUTTONS
     cancelAll = new CancelAll(m_robotDrive, onboarder, shooter, climb, ampSystem);
-    JoystickButton cancleAllSecondary = new JoystickButton(m_operatorController, 5);
-    cancleAllSecondary.onTrue(cancelAll);
+    m_operatorController.button(5).onTrue(cancelAll);
 
-    JoystickButton primeShooterButton = new JoystickButton(m_operatorController, Button.kA.value);
-    JoystickButton shootButton = new JoystickButton(m_operatorController, Button.kX.value);
-    primeShooterButton.onTrue(primeShooter);
-    shootButton.onTrue(shootNote);
+    m_operatorController.leftBumper().onTrue(primeShooter);
+    m_operatorController.rightBumper().onTrue(shootNote);
+
+    // Manual Control
+    m_operatorController.axisGreaterThan(0, 0.1).onTrue(driveOnboarder);
+    m_operatorController.back().onTrue(driveShooter);
 
     // DRIVER BUTTONS
 

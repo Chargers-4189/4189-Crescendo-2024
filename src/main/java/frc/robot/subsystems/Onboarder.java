@@ -20,11 +20,9 @@ public class Onboarder extends SubsystemBase {
   private DigitalInput shooterSensor = new DigitalInput(Constants.OnboarderConstants.kOutakeBeamDIO);
   private WPI_VictorSPX onboardMotor = new WPI_VictorSPX(Constants.OnboarderConstants.konboardMotorcanID);
 
-  private final ShuffleboardTab tab;
   private final GenericEntry booleanbox;
   
   public Onboarder(ShuffleboardTab tab) {
-    this.tab = tab;
     booleanbox = tab.add("Intake", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
   }
 

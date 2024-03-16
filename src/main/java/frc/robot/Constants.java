@@ -185,12 +185,11 @@ public final class Constants {
   }
     
   public static final class NoteAcuatorConstants {
-    public static final int kScissorLiftCanID = 11;
     public static final int kAcuatorCanID = 13;
     public static final int kRollerCanID = 12;
     public static final int kEncoderADIO = 4;
     public static final int kEncoderBDIO = 5;
-    public static final int kScissorLimitDIO = 9;
+    public static final int kAmpSensorDIO = 9;
   }
     
   public static final class RecordPlaybackConstants {
