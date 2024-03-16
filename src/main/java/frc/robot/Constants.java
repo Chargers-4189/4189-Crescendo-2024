@@ -191,6 +191,10 @@ public final class Constants {
     public static final int kEncoderBDIO = 5;
     public static final int kAmpSensorDIO = 9;
   }
+
+  public static final class ShuffleboardConstants {
+    public static final String kAutonomousTab = "Autonomous";
+  }
     
   public static final class RecordPlaybackConstants {
     public static final File kRecordDirectory = new File("/home/lvuser/Recordings");

@@ -8,11 +8,15 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.ShuffleboardConstants;
 import frc.robot.commands.AutoPrimeShooter;
 import frc.robot.commands.AutoShootNote;
 import frc.robot.commands.CancelAll;
-import frc.robot.commands.DriveOnboarder;
+import frc.robot.commands.DriveActuate;
+import frc.robot.commands.DriveClimbDown;
+import frc.robot.commands.DriveClimbUp;
 import frc.robot.commands.DriveShooter;
+import frc.robot.commands.OnboarderSystem;
 import frc.robot.commands.SwerveJoysticks;
 import frc.robot.subsystems.AmpSystem;
 import frc.robot.subsystems.Climb;
@@ -45,7 +49,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  private final ShuffleboardTab autoTab = Shuffleboard.getTab("Autonomous");
+  //private final ShuffleboardTab autoTab = Shuffleboard.getTab(ShuffleboardConstants.kAutonomousTab);
   // The driver's controller
   private CommandXboxController m_operatorController = new CommandXboxController(OIConstants.kDriverControllerPort);
   private Joystick leftStick = new Joystick(OperatorConstants.kDriverJoystickLeft);
@@ -55,13 +59,19 @@ public class RobotContainer {
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final Climb climb = new Climb();
   private final AmpSystem ampSystem = new AmpSystem();
-  private final Onboarder onboarder = new Onboarder(autoTab);
+  private final Onboarder onboarder = new Onboarder();
   private final Shooter shooter = new Shooter();
 
   // The robot's commands
   private CancelAll cancelAll;
   private DriveShooter driveShooter = new DriveShooter(shooter);
-  private DriveOnboarder driveOnboarder = new DriveOnboarder(onboarder, m_operatorController);
+  private DriveClimbUp driveClimbUp = new DriveClimbUp(climb);
+  private DriveClimbDown driveClimbDown = new DriveClimbDown(climb);
+
+  //private AutoOnboard autoOnboarder = new AutoOnboard(onboarder);
+  //private OnboarderSystem onboarderSystem = new OnboarderSystem(onboarder, m_operatorController);
+  //private DriveOnboarder driveOnboarder = new DriveOnboarder(onboarder, m_operatorController);
+  //private DriveActuate driveAcuate = new DriveActuate(m_operatorController, ampSystem);
 
   // Autonomous Commands
   private final AutoPrimeShooter primeShooter = new AutoPrimeShooter(shooter, onboarder);
@@ -73,6 +83,8 @@ public class RobotContainer {
     configureBindings();
 
     // Configure default commands
+    onboarder.setDefaultCommand(new OnboarderSystem(onboarder, m_operatorController));
+    ampSystem.setDefaultCommand(new DriveActuate(m_operatorController, ampSystem));
     m_robotDrive.setDefaultCommand(new SwerveJoysticks(m_robotDrive, leftStick, rightStick));
   }
 
@@ -94,8 +106,14 @@ public class RobotContainer {
     m_operatorController.rightBumper().onTrue(shootNote);
 
     // Manual Control
-    m_operatorController.axisGreaterThan(0, 0.1).onTrue(driveOnboarder);
     m_operatorController.back().onTrue(driveShooter);
+    // WARNING: Manual Onboarder override is located in Robot.java
+    m_operatorController.povUp().onTrue(driveClimbUp);
+    m_operatorController.povUpLeft().onTrue(driveClimbUp);
+    m_operatorController.povUpRight().onTrue(driveClimbUp);
+    m_operatorController.povDown().onTrue(driveClimbDown);
+    m_operatorController.povDownLeft().onTrue(driveClimbDown);
+    m_operatorController.povDownRight().onTrue(driveClimbDown);
 
     // DRIVER BUTTONS
 

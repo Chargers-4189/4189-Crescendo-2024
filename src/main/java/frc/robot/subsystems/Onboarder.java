@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -20,11 +21,10 @@ public class Onboarder extends SubsystemBase {
   private DigitalInput shooterSensor = new DigitalInput(Constants.OnboarderConstants.kOutakeBeamDIO);
   private WPI_VictorSPX onboardMotor = new WPI_VictorSPX(Constants.OnboarderConstants.konboardMotorcanID);
 
-  private final GenericEntry booleanbox;
+  private ShuffleboardTab tab = Shuffleboard.getTab(Constants.ShuffleboardConstants.kAutonomousTab);
+  private final GenericEntry booleanbox = tab.add("Intake", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
   
-  public Onboarder(ShuffleboardTab tab) {
-    booleanbox = tab.add("Intake", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
-  }
+  public Onboarder() {}
 
   public boolean getBumperSensor(){
     return !this.bumperSensor.get();
@@ -41,8 +41,5 @@ public class Onboarder extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     booleanbox.setBoolean(!this.bumperSensor.get());
-    
-    // System.out.println("outake"+outTake());
-    // System.out.println("intake"+intake());
   }
 }
