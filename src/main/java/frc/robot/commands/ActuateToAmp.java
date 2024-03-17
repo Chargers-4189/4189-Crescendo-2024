@@ -52,6 +52,7 @@ public class ActuateToAmp extends Command {
 
     if (initTime >= stopTime) {
       System.out.println("ERROR: ACTUATOR HAS EXCEEDED TIMEOUT LIMIT");
+      ampSystem.setActuate(0);
       isFinished = true;
     }
   }

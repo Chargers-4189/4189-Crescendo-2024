@@ -8,8 +8,10 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.RecordPlaybackConstants;
 import frc.robot.Constants.ShuffleboardConstants;
-import frc.robot.commands.AutoPrimeShooter;
-import frc.robot.commands.AutoShootNote;
+import frc.robot.commands.PrimeShooter;
+import frc.robot.commands.ShootNote;
+import frc.robot.commands.AutoPrime;
+import frc.robot.commands.AutoShoot;
 import frc.robot.commands.CancelAll;
 import frc.robot.commands.DriveActuate;
 import frc.robot.commands.DriveClimbDown;
@@ -69,8 +71,10 @@ public class RobotContainer {
   //private DriveActuate driveAcuate = new DriveActuate(m_operatorController, ampSystem);
 
   // Autonomous Commands
-  private final AutoPrimeShooter primeShooter = new AutoPrimeShooter(shooter, onboarder);
-  private final AutoShootNote shootNote = new AutoShootNote(shooter, onboarder);
+  private AutoPrime autoPrimeShooter = new AutoPrime(ampSystem, shooter, onboarder);
+  private AutoShoot autoShootNote = new AutoShoot(ampSystem, shooter, onboarder);
+  //private PrimeShooter primeShooter = new PrimeShooter(shooter, onboarder);
+  //private ShootNote shootNote = new ShootNote(shooter, onboarder);
 
   // Shuffleboard Autonomous Tab
   private final ShuffleboardTab autoTab = Shuffleboard.getTab(ShuffleboardConstants.kAutonomousTab);
@@ -114,8 +118,8 @@ public class RobotContainer {
     cancelAll = new CancelAll(m_robotDrive, onboarder, shooter, climb, ampSystem);
     m_operatorController.button(5).onTrue(cancelAll);
 
-    m_operatorController.leftBumper().onTrue(primeShooter);
-    m_operatorController.rightBumper().onTrue(shootNote);
+    m_operatorController.leftBumper().onTrue(autoPrimeShooter);
+    m_operatorController.rightBumper().onTrue(autoShootNote);
 
     // Manual Control
     m_operatorController.back().onTrue(driveShooter);

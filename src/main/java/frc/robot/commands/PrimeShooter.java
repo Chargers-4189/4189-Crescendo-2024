@@ -8,12 +8,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Onboarder;
 import frc.robot.subsystems.Shooter;
 
-public class AutoPrimeShooter extends Command {
+public class PrimeShooter extends Command {
   private Shooter shooter;
   private Onboarder onboarder;
 
   /** Creates a new PrimeShooter. */
-  public AutoPrimeShooter(Shooter shooter, Onboarder onboarder) {
+  public PrimeShooter(Shooter shooter, Onboarder onboarder) {
     this.shooter = shooter;
     this.onboarder = onboarder;
 
