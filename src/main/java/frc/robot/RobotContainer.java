@@ -38,8 +38,10 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -83,7 +85,7 @@ public class RobotContainer {
     configureBindings();
 
     // Configure default commands
-    onboarder.setDefaultCommand(new OnboarderSystem(onboarder, m_operatorController));
+    onboarder.setDefaultCommand(new OnboarderSystem(onboarder, m_operatorController, false, false));
     ampSystem.setDefaultCommand(new DriveActuate(m_operatorController, ampSystem));
     m_robotDrive.setDefaultCommand(new SwerveJoysticks(m_robotDrive, leftStick, rightStick));
   }
@@ -107,7 +109,7 @@ public class RobotContainer {
 
     // Manual Control
     m_operatorController.back().onTrue(driveShooter);
-    // WARNING: Manual Onboarder override is located in Robot.java
+    // WARNING: Manual Onboarder override is located in OnboarderSystem.java
     m_operatorController.povUp().onTrue(driveClimbUp);
     m_operatorController.povUpLeft().onTrue(driveClimbUp);
     m_operatorController.povUpRight().onTrue(driveClimbUp);
@@ -116,11 +118,25 @@ public class RobotContainer {
     m_operatorController.povDownRight().onTrue(driveClimbDown);
 
     // DRIVER BUTTONS
+    new JoystickButton(leftStick, 6).onTrue(cancelAll);
+    new JoystickButton(leftStick, 7).onTrue(cancelAll);
 
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+    new JoystickButton(leftStick, 1).onTrue(new OnboarderSystem(onboarder, m_operatorController, true, true));
+    new JoystickButton(rightStick, 1).onTrue(new OnboarderSystem(onboarder, m_operatorController, true, false));
+    new JoystickButton(rightStick, 3).onTrue(driveShooter);
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
+    new JoystickButton(leftStick, 10)
+      .whileTrue(new RunCommand(
+        () -> {
+          m_robotDrive.resetGyro();
+        }
+      ));
+    new JoystickButton(leftStick, 11)
+      .whileTrue(new RunCommand(
+        () -> {
+          m_robotDrive.resetGyro();
+        }
+      ));
   }
 
   /**

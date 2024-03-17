@@ -12,10 +12,14 @@ public class OnboarderSystem extends Command {
   /** Creates a new OnboarderSystem. */
   private Onboarder onboarder;
   private CommandXboxController operatorController;
+  private boolean joystickControl;
+  private boolean intake;
 
-  public OnboarderSystem(Onboarder onboarder, CommandXboxController operatorController) {
+  public OnboarderSystem(Onboarder onboarder, CommandXboxController operatorController, boolean joystickControl, boolean intake) {
     this.onboarder = onboarder;
     this.operatorController = operatorController;
+    this.joystickControl = joystickControl;
+    this.intake = intake;
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(onboarder);
@@ -28,14 +32,24 @@ public class OnboarderSystem extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (Math.abs(operatorController.getLeftY()) > .1) {
-      onboarder.setOnboarder(operatorController.getLeftY());
-    } else if(onboarder.getBumperSensor()){
-      onboarder.setOnboarder(0);
-    } else if(onboarder.getShooterSensor()) {
-      onboarder.setOnboarder(0.5);
-    }else {
-      onboarder.setOnboarder(0);
+    if (joystickControl) {
+      // For joystick override
+      if (intake) {
+        onboarder.setOnboarder(1);
+      } else {
+        onboarder.setOnboarder(-1);
+      }
+    } else {
+      // For Auto-Intake & Operator override
+      if (Math.abs(operatorController.getLeftY()) > .1) {
+        onboarder.setOnboarder(operatorController.getLeftY());
+      } else if(onboarder.getBumperSensor()){
+        onboarder.setOnboarder(0);
+      } else if(onboarder.getShooterSensor()) {
+        onboarder.setOnboarder(0.5);
+      }else {
+        onboarder.setOnboarder(0);
+      }
     }
   }
 
