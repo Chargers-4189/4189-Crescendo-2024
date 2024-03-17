@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.AmpSystem;
 import frc.robot.subsystems.Onboarder;
 import frc.robot.subsystems.Shooter;
 
@@ -17,14 +18,16 @@ public class AutoShootNote extends Command {
 
   private Shooter shooter;
   private Onboarder onboarder;
+  private AmpSystem ampSystem;
 
   /** Creates a new ShootNote. */
-  public AutoShootNote(Shooter shooter, Onboarder onboarder) {
+  public AutoShootNote(Shooter shooter, Onboarder onboarder, AmpSystem ampSystem) {
     this.shooter = shooter;
     this.onboarder = onboarder;
+    this.ampSystem = ampSystem;
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(shooter, onboarder);
+    addRequirements(shooter, onboarder, ampSystem);
   }
 
   // Called when the command is initially scheduled.
@@ -39,10 +42,14 @@ public class AutoShootNote extends Command {
   @Override
   public void execute() {
     initTime = Timer.getFPGATimestamp();
-    shooter.setShooter(1);
-    onboarder.setOnboarder(1);
+    if (!ampSystem.getAmpSensor()) {
+      shooter.setShooter(1);
+      onboarder.setOnboarder(1);
 
-    if (initTime >= stopTime) {
+      if (initTime >= stopTime) {
+        isFinished = true;
+      }
+    } else {
       isFinished = true;
     }
   }

@@ -7,6 +7,12 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Onboarder;
 
+/* 
+ * NOT USED! This is due to the limited ability of running two default
+ * at the same time. Please look in OnboarderSystem.java for actual
+ * command usuage.
+ */
+
 public class AutoOnboard extends Command {
   /** Creates a new AutoOnboard. */
   private Onboarder onboarder;

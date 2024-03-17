@@ -69,8 +69,8 @@ public class RobotContainer {
   //private DriveActuate driveAcuate = new DriveActuate(m_operatorController, ampSystem);
 
   // Autonomous Commands
-  private final AutoPrimeShooter primeShooter = new AutoPrimeShooter(shooter, onboarder);
-  private final AutoShootNote shootNote = new AutoShootNote(shooter, onboarder);
+  private final AutoPrimeShooter primeShooter = new AutoPrimeShooter(shooter, onboarder, ampSystem);
+  private final AutoShootNote shootNote = new AutoShootNote(shooter, onboarder, ampSystem);
 
   // Shuffleboard Autonomous Tab
   private final ShuffleboardTab autoTab = Shuffleboard.getTab(ShuffleboardConstants.kAutonomousTab);
@@ -81,6 +81,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    // Shuffleboard file access for playback files
     File[] files = RecordPlaybackConstants.kRecordDirectory.listFiles();
     for (int i = 0; i < files.length; i++) {
       fileChooser.addOption(files[i].getName(), files[i]);
@@ -89,6 +90,7 @@ public class RobotContainer {
     .withWidget(BuiltInWidgets.kComboBoxChooser)
     .withPosition(0, 0)
     .withSize(2, 1);
+
     // Configure the trigger bindings
     configureBindings();
 
@@ -135,18 +137,16 @@ public class RobotContainer {
     new JoystickButton(rightStick, 1).onTrue(new OnboarderSystem(onboarder, m_operatorController, true, false));
     new JoystickButton(rightStick, 3).onTrue(driveShooter);
 
-    new JoystickButton(leftStick, 10)
-      .whileTrue(new RunCommand(
+    new JoystickButton(leftStick, 10).whileTrue(new RunCommand(
         () -> {
           m_robotDrive.resetGyro();
         }
-      ));
-    new JoystickButton(leftStick, 11)
-      .whileTrue(new RunCommand(
+    ));
+    new JoystickButton(leftStick, 11).whileTrue(new RunCommand(
         () -> {
           m_robotDrive.resetGyro();
         }
-      ));
+    ));
   }
 
   /**
