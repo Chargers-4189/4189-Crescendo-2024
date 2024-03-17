@@ -5,20 +5,17 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.AmpSystem;
 import frc.robot.subsystems.Onboarder;
 import frc.robot.subsystems.Shooter;
 
 public class AutoPrimeShooter extends Command {
   private Shooter shooter;
   private Onboarder onboarder;
-  private AmpSystem ampSystem;
 
   /** Creates a new PrimeShooter. */
-  public AutoPrimeShooter(Shooter shooter, Onboarder onboarder, AmpSystem ampSystem) {
+  public AutoPrimeShooter(Shooter shooter, Onboarder onboarder) {
     this.shooter = shooter;
     this.onboarder = onboarder;
-    this.ampSystem = ampSystem;
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooter, onboarder);
@@ -31,16 +28,11 @@ public class AutoPrimeShooter extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (!ampSystem.getAmpSensor() && !ampSystem.actuateToAmp()) {
-      if (!onboarder.getShooterSensor()) {
-        onboarder.setOnboarder(0);
-        shooter.setShooter(1);
-      } else {
-        onboarder.setOnboarder(-0.5);
-      }
-    } else {
+    if (!onboarder.getShooterSensor()) {
       onboarder.setOnboarder(0);
-      shooter.setShooter(0);
+      shooter.setShooter(1);
+    } else {
+      onboarder.setOnboarder(-0.5);
     }
   }
 

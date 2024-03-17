@@ -6,25 +6,23 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Onboarder;
-import frc.robot.subsystems.Shooter;
+import frc.robot.Constants;
+import frc.robot.subsystems.AmpSystem;
 
-public class AutoShootNote extends Command {
+public class ActuateToAmp extends Command {
+  /** Creates a new ActuateToAmp. */
   private boolean isFinished;
   private double initTime = 0;
   private double stopTime = 0;
-  private double duration = 1;
+  private double duration = 5;
 
-  private Shooter shooter;
-  private Onboarder onboarder;
+  private AmpSystem ampSystem;
 
-  /** Creates a new ShootNote. */
-  public AutoShootNote(Shooter shooter, Onboarder onboarder) {
-    this.shooter = shooter;
-    this.onboarder = onboarder;
+  public ActuateToAmp(AmpSystem ampSystem) {
+    this.ampSystem = ampSystem;
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(shooter, onboarder);
+    addRequirements(ampSystem);
   }
 
   // Called when the command is initially scheduled.
@@ -38,11 +36,22 @@ public class AutoShootNote extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    double ratioToPos = ampSystem.getEncoderValue() / Constants.AmpSystemConstants.kEncoderMaxPosition;
     initTime = Timer.getFPGATimestamp();
-    shooter.setShooter(1);
-    onboarder.setOnboarder(1);
+
+    if (ratioToPos > 0.95) {
+      ampSystem.setActuate(0);
+      isFinished = true;
+    } else if (ratioToPos > 0.8) {
+      ampSystem.setActuate(-0.3);
+    } else if (ratioToPos > 0.5) {
+      ampSystem.setActuate(0.2);
+    } else {
+      ampSystem.setActuate(0.4);
+    }
 
     if (initTime >= stopTime) {
+      System.out.println("ERROR: ACTUATOR HAS EXCEEDED TIMEOUT LIMIT");
       isFinished = true;
     }
   }
@@ -50,8 +59,7 @@ public class AutoShootNote extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.setShooter(0);
-    onboarder.setOnboarder(0);
+    ampSystem.setActuate(0);
   }
 
   // Returns true when the command should end.

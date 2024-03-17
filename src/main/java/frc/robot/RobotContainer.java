@@ -69,8 +69,8 @@ public class RobotContainer {
   //private DriveActuate driveAcuate = new DriveActuate(m_operatorController, ampSystem);
 
   // Autonomous Commands
-  private final AutoPrimeShooter primeShooter = new AutoPrimeShooter(shooter, onboarder, ampSystem);
-  private final AutoShootNote shootNote = new AutoShootNote(shooter, onboarder, ampSystem);
+  private final AutoPrimeShooter primeShooter = new AutoPrimeShooter(shooter, onboarder);
+  private final AutoShootNote shootNote = new AutoShootNote(shooter, onboarder);
 
   // Shuffleboard Autonomous Tab
   private final ShuffleboardTab autoTab = Shuffleboard.getTab(ShuffleboardConstants.kAutonomousTab);

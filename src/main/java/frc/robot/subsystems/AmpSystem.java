@@ -62,38 +62,6 @@ public class AmpSystem extends SubsystemBase {
    encoder.reset();
   }
 
-  public boolean actuateToAmp() {
-    double ratioToPos = this.encoderTicks / extendLimit;
-
-    if (ratioToPos > 0.95) {
-      setActuate(0);
-      return true;
-    } else if (ratioToPos > 0.8) {
-      setActuate(-0.3);
-    } else if (ratioToPos > 0.5) {
-      setActuate(0.2);
-    } else {
-      setActuate(0.4);
-    }
-    return false;
-  }
-
-  public boolean actuateToRest() {
-    double ratioToPos = this.encoderTicks / extendLimit;
-
-    if (ratioToPos < 0.05) {
-      setActuate(0);
-      return true;
-    } else if (ratioToPos < 0.2) {
-      setActuate(0.3);
-    } else if (ratioToPos < 0.5) {
-      setActuate(-0.2);
-    } else {
-      setActuate(-0.4);
-    }
-    return false;
-  }
-
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
