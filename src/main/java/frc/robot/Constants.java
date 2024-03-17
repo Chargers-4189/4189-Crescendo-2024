@@ -176,6 +176,7 @@ public final class Constants {
   public static final class ShooterConstants {
     public static final int kTopShooterCANID = 6;
     public static final int kBottomShooterCANID = 7;
+    public static final double kShooterPowerValue = 0.7;
   }
 
   public static final class ClimbConstants {

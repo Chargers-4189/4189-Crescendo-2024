@@ -18,6 +18,6 @@ public class AutoShoot extends SequentialCommandGroup {
   public AutoShoot(AmpSystem ampSystem, Shooter shooter, Onboarder onboarder) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new ShootNote(shooter, onboarder), new ActuateToRest(ampSystem));
+    addCommands(new ActuateToAmp(ampSystem), new PrimeShooter(shooter, onboarder), new ShootNote(shooter, onboarder), new ActuateToRest(ampSystem));
   }
 }

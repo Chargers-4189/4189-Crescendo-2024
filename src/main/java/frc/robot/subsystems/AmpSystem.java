@@ -18,6 +18,7 @@ public class AmpSystem extends SubsystemBase {
   private double restLimit = 0;
   private double extendLimit = Constants.AmpSystemConstants.kEncoderMaxPosition;
   private double actuatorPower = 0;
+  private boolean disableMotor = false;
 
   private Encoder encoder = new Encoder(Constants.AmpSystemConstants.kEncoderADIO, Constants.AmpSystemConstants.kEncoderBDIO);
   private DigitalInput ampSensor = new DigitalInput(Constants.AmpSystemConstants.kAmpSensorDIO);
@@ -48,7 +49,9 @@ public class AmpSystem extends SubsystemBase {
     } else {
         this.actuatorPower = 0;
     }
-    actuator.set(ControlMode.PercentOutput, this.actuatorPower);
+    if (!disableMotor) {
+      actuator.set(ControlMode.PercentOutput, this.actuatorPower);
+    }
   }
 
   public boolean getAmpSensor() {
@@ -58,8 +61,17 @@ public class AmpSystem extends SubsystemBase {
     this.encoderTicks = encoder.get();
     return this.encoderTicks;
   }
-  public void resetEncoder(){
+  public void resetEncoder() {
    encoder.reset();
+  }
+
+  public void disableMotor() {
+    this.disableMotor = true;
+    actuator.set(ControlMode.PercentOutput, 0);
+  }
+  public void enableMotor() {
+    this.disableMotor = false;
+    actuator.set(ControlMode.PercentOutput, 0);
   }
 
   @Override

@@ -46,7 +46,7 @@ public class OnboarderSystem extends Command {
       } else if(onboarder.getBumperSensor()){
         onboarder.setOnboarder(0);
       } else if(onboarder.getShooterSensor()) {
-        onboarder.setOnboarder(0.5);
+        onboarder.setOnboarder(0.75);
       }else {
         onboarder.setOnboarder(0);
       }

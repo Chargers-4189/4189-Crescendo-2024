@@ -6,10 +6,11 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.Onboarder;
 import frc.robot.subsystems.Shooter;
 
-public class AutoShootNote extends Command {
+public class ShootNote extends Command {
   private boolean isFinished;
   private double initTime = 0;
   private double stopTime = 0;
@@ -19,7 +20,7 @@ public class AutoShootNote extends Command {
   private Onboarder onboarder;
 
   /** Creates a new ShootNote. */
-  public AutoShootNote(Shooter shooter, Onboarder onboarder) {
+  public ShootNote(Shooter shooter, Onboarder onboarder) {
     this.shooter = shooter;
     this.onboarder = onboarder;
 
@@ -39,7 +40,7 @@ public class AutoShootNote extends Command {
   @Override
   public void execute() {
     initTime = Timer.getFPGATimestamp();
-    shooter.setShooter(1);
+    shooter.setShooter(Constants.ShooterConstants.kShooterPowerValue);
     onboarder.setOnboarder(1);
 
     if (initTime >= stopTime) {

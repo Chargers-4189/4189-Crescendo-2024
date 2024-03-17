@@ -8,9 +8,6 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.RecordPlaybackConstants;
 import frc.robot.Constants.ShuffleboardConstants;
-import frc.robot.commands.PrimeShooter;
-import frc.robot.commands.ShootNote;
-import frc.robot.commands.AutoPrime;
 import frc.robot.commands.AutoShoot;
 import frc.robot.commands.CancelAll;
 import frc.robot.commands.DriveActuate;
@@ -71,7 +68,6 @@ public class RobotContainer {
   //private DriveActuate driveAcuate = new DriveActuate(m_operatorController, ampSystem);
 
   // Autonomous Commands
-  private AutoPrime autoPrimeShooter = new AutoPrime(ampSystem, shooter, onboarder);
   private AutoShoot autoShootNote = new AutoShoot(ampSystem, shooter, onboarder);
   //private PrimeShooter primeShooter = new PrimeShooter(shooter, onboarder);
   //private ShootNote shootNote = new ShootNote(shooter, onboarder);
@@ -118,7 +114,6 @@ public class RobotContainer {
     cancelAll = new CancelAll(m_robotDrive, onboarder, shooter, climb, ampSystem);
     m_operatorController.button(5).onTrue(cancelAll);
 
-    m_operatorController.leftBumper().onTrue(autoPrimeShooter);
     m_operatorController.rightBumper().onTrue(autoShootNote);
 
     // Manual Control
@@ -141,14 +136,24 @@ public class RobotContainer {
     new JoystickButton(rightStick, 1).onTrue(new OnboarderSystem(onboarder, m_operatorController, true, false));
     new JoystickButton(rightStick, 3).onTrue(driveShooter);
 
-    new JoystickButton(leftStick, 10).whileTrue(new RunCommand(
+    new JoystickButton(leftStick, 10).onTrue(new RunCommand(
         () -> {
           m_robotDrive.resetGyro();
         }
     ));
-    new JoystickButton(leftStick, 11).whileTrue(new RunCommand(
+    new JoystickButton(leftStick, 11).onTrue(new RunCommand(
         () -> {
           m_robotDrive.resetGyro();
+        }
+    ));
+    new JoystickButton(leftStick, 8).onTrue(new RunCommand(
+        () -> {
+          ampSystem.enableMotor();
+        }
+    ));
+    new JoystickButton(leftStick, 9).onTrue(new RunCommand(
+        () -> {
+          ampSystem.enableMotor();
         }
     ));
   }

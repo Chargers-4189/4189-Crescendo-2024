@@ -14,7 +14,7 @@ public class ActuateToAmp extends Command {
   private boolean isFinished;
   private double initTime = 0;
   private double stopTime = 0;
-  private double duration = 5;
+  private double duration = 3;
 
   private AmpSystem ampSystem;
 
@@ -42,8 +42,6 @@ public class ActuateToAmp extends Command {
     if (ratioToPos > 0.95) {
       ampSystem.setActuate(0);
       isFinished = true;
-    } else if (ratioToPos > 0.8) {
-      ampSystem.setActuate(-0.3);
     } else if (ratioToPos > 0.5) {
       ampSystem.setActuate(0.2);
     } else {
@@ -53,6 +51,7 @@ public class ActuateToAmp extends Command {
     if (initTime >= stopTime) {
       System.out.println("ERROR: ACTUATOR HAS EXCEEDED TIMEOUT LIMIT");
       ampSystem.setActuate(0);
+      ampSystem.disableMotor();
       isFinished = true;
     }
   }

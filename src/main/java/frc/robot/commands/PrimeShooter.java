@@ -4,11 +4,18 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.Onboarder;
 import frc.robot.subsystems.Shooter;
 
 public class PrimeShooter extends Command {
+  private boolean isFinished;
+  private double initTime = 0;
+  private double stopTime = 0;
+  private double duration = 0.125;
+
   private Shooter shooter;
   private Onboarder onboarder;
 
@@ -23,14 +30,21 @@ public class PrimeShooter extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    isFinished = false;
+    initTime = Timer.getFPGATimestamp();
+    stopTime = Timer.getFPGATimestamp() + duration;
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (!onboarder.getShooterSensor()) {
+    initTime = Timer.getFPGATimestamp();
+
+    if (!onboarder.getShooterSensor() || initTime >= stopTime) {
       onboarder.setOnboarder(0);
-      shooter.setShooter(1);
+      shooter.setShooter(Constants.ShooterConstants.kShooterPowerValue);
+      isFinished = true;
     } else {
       onboarder.setOnboarder(-0.5);
     }
@@ -40,12 +54,12 @@ public class PrimeShooter extends Command {
   @Override
   public void end(boolean interrupted) {
     onboarder.setOnboarder(0);
-    shooter.setShooter(0);
+    shooter.setShooter(Constants.ShooterConstants.kShooterPowerValue);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return isFinished;
   }
 }
