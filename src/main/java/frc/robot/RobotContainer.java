@@ -4,10 +4,9 @@
 
 package frc.robot;
 
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.RecordPlaybackConstants;
 import frc.robot.Constants.ShuffleboardConstants;
 import frc.robot.commands.AutoPrimeShooter;
 import frc.robot.commands.AutoShootNote;
@@ -17,6 +16,7 @@ import frc.robot.commands.DriveClimbDown;
 import frc.robot.commands.DriveClimbUp;
 import frc.robot.commands.DriveShooter;
 import frc.robot.commands.OnboarderSystem;
+import frc.robot.commands.PlayBack;
 import frc.robot.commands.SwerveJoysticks;
 import frc.robot.subsystems.AmpSystem;
 import frc.robot.subsystems.Climb;
@@ -24,22 +24,16 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Onboarder;
 import frc.robot.subsystems.Shooter;
 
-import java.util.List;
+import java.io.File;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -51,7 +45,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  //private final ShuffleboardTab autoTab = Shuffleboard.getTab(ShuffleboardConstants.kAutonomousTab);
   // The driver's controller
   private CommandXboxController m_operatorController = new CommandXboxController(OIConstants.kDriverControllerPort);
   private Joystick leftStick = new Joystick(OperatorConstants.kDriverJoystickLeft);
@@ -79,8 +72,23 @@ public class RobotContainer {
   private final AutoPrimeShooter primeShooter = new AutoPrimeShooter(shooter, onboarder);
   private final AutoShootNote shootNote = new AutoShootNote(shooter, onboarder);
 
+  // Shuffleboard Autonomous Tab
+  private final ShuffleboardTab autoTab = Shuffleboard.getTab(ShuffleboardConstants.kAutonomousTab);
+  private final GenericEntry alliancebox = autoTab.add("Red Alliance", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
+  private final SendableChooser<File> fileChooser = new SendableChooser<>();
+  // Playback
+  private PlayBack playBackAuto;
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    File[] files = RecordPlaybackConstants.kRecordDirectory.listFiles();
+    for (int i = 0; i < files.length; i++) {
+      fileChooser.addOption(files[i].getName(), files[i]);
+    }
+    autoTab.add("Autonomous Mode", fileChooser)
+    .withWidget(BuiltInWidgets.kComboBoxChooser)
+    .withPosition(0, 0)
+    .withSize(2, 1);
     // Configure the trigger bindings
     configureBindings();
 
@@ -118,6 +126,8 @@ public class RobotContainer {
     m_operatorController.povDownRight().onTrue(driveClimbDown);
 
     // DRIVER BUTTONS
+    playBackAuto = new PlayBack(m_robotDrive, onboarder, shooter, fileChooser, alliancebox);
+    new JoystickButton(rightStick, 7).onTrue(playBackAuto);
     new JoystickButton(leftStick, 6).onTrue(cancelAll);
     new JoystickButton(leftStick, 7).onTrue(cancelAll);
 
@@ -145,41 +155,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    
-    TrajectoryConfig config = new TrajectoryConfig(
-        AutoConstants.kMaxSpeedMetersPerSecond,
-        AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-        // Add kinematics to ensure max speed is actually obeyed
-        .setKinematics(DriveConstants.kDriveKinematics);
-
-    // An example trajectory to follow. All units in meters.
-    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-        new Pose2d(0, 0, new Rotation2d(0)),
-        List.of(new Translation2d(0, 0), new Translation2d(0.05, 0)),
-        new Pose2d(0.1, 0, new Rotation2d(0)),
-        config);
-
-    var thetaController = new ProfiledPIDController(
-        AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
-    thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-    SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-        exampleTrajectory,
-        m_robotDrive::getPose, // Functional interface to feed supplier
-        DriveConstants.kDriveKinematics,
-
-        // Position controllers
-        new PIDController(AutoConstants.kPXController, 0, 0),
-        new PIDController(AutoConstants.kPYController, 0, 0),
-        thetaController,
-        m_robotDrive::setModuleStates,
-        m_robotDrive);
-
-    // Reset odometry to the starting pose of the trajectory.
-    m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
-
-    // Run path following command, then stop at the end.
-    return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false, false));
+    // Run currently selected playback file
+    return new PlayBack(m_robotDrive, onboarder, shooter, fileChooser, alliancebox);
   }
 }
