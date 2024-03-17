@@ -31,7 +31,7 @@ public class AutoPrimeShooter extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (!ampSystem.getAmpSensor()) {
+    if (!ampSystem.getAmpSensor() && !ampSystem.actuateToAmp()) {
       if (!onboarder.getShooterSensor()) {
         onboarder.setOnboarder(0);
         shooter.setShooter(1);

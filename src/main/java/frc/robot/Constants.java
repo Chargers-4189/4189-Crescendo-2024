@@ -184,12 +184,14 @@ public final class Constants {
     public static final int kExtendLimitDIO = 2;
   }
     
-  public static final class NoteAcuatorConstants {
+  public static final class AmpSystemConstants {
     public static final int kAcuatorCanID = 13;
     public static final int kRollerCanID = 12;
     public static final int kEncoderADIO = 4;
     public static final int kEncoderBDIO = 5;
     public static final int kAmpSensorDIO = 9;
+
+    public static final int kEncoderMaxPosition = 500;
   }
 
   public static final class ShuffleboardConstants {

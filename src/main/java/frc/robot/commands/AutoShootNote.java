@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.AmpSystem;
 import frc.robot.subsystems.Onboarder;
 import frc.robot.subsystems.Shooter;
@@ -42,15 +43,17 @@ public class AutoShootNote extends Command {
   @Override
   public void execute() {
     initTime = Timer.getFPGATimestamp();
-    if (!ampSystem.getAmpSensor()) {
+    if (ampSystem.getEncoderValue() > (0.95 * Constants.AmpSystemConstants.kEncoderMaxPosition)) {
       shooter.setShooter(1);
       onboarder.setOnboarder(1);
 
       if (initTime >= stopTime) {
-        isFinished = true;
+        if (!ampSystem.actuateToRest()) {
+          isFinished = true;
+        }
       }
     } else {
-      isFinished = true;
+      ampSystem.actuateToAmp();
     }
   }
 
