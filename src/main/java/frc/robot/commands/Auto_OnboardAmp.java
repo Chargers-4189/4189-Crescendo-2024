@@ -17,6 +17,12 @@ public class Auto_OnboardAmp extends SequentialCommandGroup {
   public Auto_OnboardAmp(AmpSystem ampSystem, Onboarder onboarder, Shooter shooter) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new ActuateToAmp(ampSystem), new AmpOnboard(onboarder, shooter, ampSystem));
+    try {
+      addCommands(new ActuateToAmp(ampSystem), new AmpOnboard(onboarder, shooter, ampSystem));
+    } catch (Exception e) {
+      addCommands(new CancelAmpSystem(onboarder, shooter, ampSystem));
+      System.out.println("Failed to AutoOnboard");
+      e.printStackTrace();
+    }
   }
 }

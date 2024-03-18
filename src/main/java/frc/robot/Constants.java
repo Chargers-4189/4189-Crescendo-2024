@@ -194,6 +194,8 @@ public final class Constants {
     public static final int kAmpSensorDIO = 9;
 
     public static final int kEncoderMaxPosition = 500;
+    public static final double kAcuateTimeoutLimit = 3;
+    public static final double kNoteTransferTimeoutLimit = 5;
   }
 
   public static final class ShuffleboardConstants {

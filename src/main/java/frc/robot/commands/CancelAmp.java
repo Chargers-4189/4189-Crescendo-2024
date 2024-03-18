@@ -4,21 +4,16 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 import frc.robot.subsystems.AmpSystem;
 
-public class ActuateToAmp extends Command {
-  /** Creates a new ActuateToAmp. */
+public class CancelAmp extends Command {
   private boolean isFinished;
-  private double initTime = 0;
-  private double timeoutTime = 0;
-  private double timeout = Constants.AmpSystemConstants.kAcuateTimeoutLimit;
 
-  private AmpSystem ampSystem;
+  AmpSystem ampSystem;
 
-  public ActuateToAmp(AmpSystem ampSystem) {
+  /** Creates a new CancelAll. */
+  public CancelAmp(AmpSystem ampSystem) {
     this.ampSystem = ampSystem;
 
     // Use addRequirements() here to declare subsystem dependencies.
@@ -29,35 +24,21 @@ public class ActuateToAmp extends Command {
   @Override
   public void initialize() {
     isFinished = false;
-    initTime = Timer.getFPGATimestamp();
-    timeoutTime = Timer.getFPGATimestamp() + timeout;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double ratioToPos = ampSystem.getEncoderValue() / Constants.AmpSystemConstants.kEncoderMaxPosition;
-    initTime = Timer.getFPGATimestamp();
+    ampSystem.setRoller(0.01);
+    ampSystem.setActuate(0.01);
 
-    if (ratioToPos > 0.95) {
-      ampSystem.setActuate(0);
-      isFinished = true;
-    } else if (ratioToPos > 0.5) {
-      ampSystem.setActuate(0.2);
-    } else {
-      ampSystem.setActuate(0.4);
-    }
-
-    if (initTime >= timeoutTime) {
-      ampSystem.setActuate(0);
-      ampSystem.disableMotor();
-      throw new Error("ActuateToAmp has exceeded timeout limit");
-    }
+    isFinished = true;
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    ampSystem.setRoller(0);
     ampSystem.setActuate(0);
   }
 

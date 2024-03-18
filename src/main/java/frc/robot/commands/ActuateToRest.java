@@ -13,8 +13,8 @@ public class ActuateToRest extends Command {
   /** Creates a new ActuateToRest. */
   private boolean isFinished;
   private double initTime = 0;
-  private double stopTime = 0;
-  private double duration = 3;
+  private double timeoutTime = 0;
+  private double duration = Constants.AmpSystemConstants.kAcuateTimeoutLimit;
 
   private AmpSystem ampSystem;
 
@@ -30,7 +30,7 @@ public class ActuateToRest extends Command {
   public void initialize() {
     isFinished = false;
     initTime = Timer.getFPGATimestamp();
-    stopTime = Timer.getFPGATimestamp() + duration;
+    timeoutTime = Timer.getFPGATimestamp() + duration;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -48,11 +48,10 @@ public class ActuateToRest extends Command {
       ampSystem.setActuate(-0.4);
     }
 
-    if (initTime >= stopTime) {
-      System.err.println("ERROR: ActuateToRest has exceeded timeout limit. Stopping command");
+    if (initTime >= timeoutTime) {
       ampSystem.setActuate(0);
       ampSystem.disableMotor();
-      isFinished = true;
+      throw new Error("ActuateToRest has exceeded timeout limit");
     }
   }
 

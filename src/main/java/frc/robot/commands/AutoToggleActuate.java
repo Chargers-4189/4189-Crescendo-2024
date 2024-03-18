@@ -13,8 +13,8 @@ public class AutoToggleActuate extends Command {
   /** Creates a new AutoToggleActuate. */
   private boolean isFinished;
   private double initTime = 0;
-  private double stopTime = 0;
-  private double duration = 3;
+  private double timeoutTime = 0;
+  private double timeout = Constants.AmpSystemConstants.kAcuateTimeoutLimit;
 
   private AmpSystem ampSystem;
   private boolean restPosition = true;
@@ -36,7 +36,7 @@ public class AutoToggleActuate extends Command {
     }
     isFinished = false;
     initTime = Timer.getFPGATimestamp();
-    stopTime = Timer.getFPGATimestamp() + duration;
+    timeoutTime = Timer.getFPGATimestamp() + timeout;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -69,10 +69,10 @@ public class AutoToggleActuate extends Command {
 
     }
 
-    if (initTime >= stopTime) {
-      System.err.println("ERROR: AutoToggleActuate has exceeded timeout limit. Stopping command.");
+    if (initTime >= timeoutTime) {
       ampSystem.setActuate(0);
-      isFinished = true;
+      ampSystem.disableMotor();
+      throw new Error("AutoToggleActuate has exceeded timeout limit");
     }
   }
 
