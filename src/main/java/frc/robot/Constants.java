@@ -168,7 +168,8 @@ public final class Constants {
   }
 
   public static final class OnboarderConstants {
-    public static final int konboardMotorcanID = 8;
+    public static final int konboardMotorCANID = 8;
+    public static final int kOnboarderLightCANID = 18;
     public static final int kIntakeBeamDIO = 0;
     public static final int kOutakeBeamDIO = 1;
   }

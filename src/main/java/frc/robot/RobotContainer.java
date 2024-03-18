@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.RecordPlaybackConstants;
 import frc.robot.Constants.ShuffleboardConstants;
@@ -48,7 +47,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The driver's controller
-  private CommandXboxController m_operatorController = new CommandXboxController(OIConstants.kDriverControllerPort);
+  private CommandXboxController m_operatorController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
   private Joystick leftStick = new Joystick(OperatorConstants.kDriverJoystickLeft);
   private Joystick rightStick = new Joystick(OperatorConstants.kDriverJoystickRight);
 
@@ -122,14 +121,14 @@ public class RobotContainer {
     m_operatorController.a().onTrue(autoOnboardAmp);
 
     // Manual Control
-    m_operatorController.back().onTrue(driveShooter);
+    m_operatorController.back().whileTrue(driveShooter);
     // WARNING: Manual Onboarder override is located in OnboarderSystem.java (Default Command)
-    m_operatorController.povUp().onTrue(driveClimbUp);
-    m_operatorController.povUpLeft().onTrue(driveClimbUp);
-    m_operatorController.povUpRight().onTrue(driveClimbUp);
-    m_operatorController.povDown().onTrue(driveClimbDown);
-    m_operatorController.povDownLeft().onTrue(driveClimbDown);
-    m_operatorController.povDownRight().onTrue(driveClimbDown);
+    m_operatorController.povUp().whileTrue(driveClimbUp);
+    m_operatorController.povUpLeft().whileTrue(driveClimbUp);
+    m_operatorController.povUpRight().whileTrue(driveClimbUp);
+    m_operatorController.povDown().whileTrue(driveClimbDown);
+    m_operatorController.povDownLeft().whileTrue(driveClimbDown);
+    m_operatorController.povDownRight().whileTrue(driveClimbDown);
 
     // DRIVER BUTTONS
     playBackAuto = new PlayBack(m_robotDrive, onboarder, shooter, fileChooser, alliancebox);
@@ -137,9 +136,9 @@ public class RobotContainer {
     new JoystickButton(leftStick, 6).onTrue(cancelAll);
     new JoystickButton(leftStick, 7).onTrue(cancelAll);
 
-    new JoystickButton(leftStick, 1).onTrue(new OnboarderSystem(onboarder, m_operatorController, true, true));
-    new JoystickButton(rightStick, 1).onTrue(new OnboarderSystem(onboarder, m_operatorController, true, false));
-    new JoystickButton(rightStick, 3).onTrue(driveShooter);
+    new JoystickButton(leftStick, 1).whileTrue(new OnboarderSystem(onboarder, m_operatorController, true, true));
+    new JoystickButton(rightStick, 1).whileTrue(new OnboarderSystem(onboarder, m_operatorController, true, false));
+    new JoystickButton(rightStick, 3).whileTrue(driveShooter);
 
     new JoystickButton(leftStick, 10).whileTrue(new RunCommand(
         () -> {
