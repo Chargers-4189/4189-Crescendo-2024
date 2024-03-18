@@ -9,18 +9,19 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.AmpSystem;
 
-public class ActuateToRest extends Command {
-  /** Creates a new ActuateToRest. */
+public class AutoToggleActuate extends Command {
+  /** Creates a new AutoToggleActuate. */
   private boolean isFinished;
   private double initTime = 0;
   private double stopTime = 0;
   private double duration = 3;
 
   private AmpSystem ampSystem;
+  private boolean restPosition = true;
 
-  public ActuateToRest(AmpSystem ampSystem) {
+
+  public AutoToggleActuate(AmpSystem ampSystem) {
     this.ampSystem = ampSystem;
-
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(ampSystem);
   }
@@ -28,6 +29,11 @@ public class ActuateToRest extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    if (ampSystem.getEncoderValue() < 0.1 * Constants.AmpSystemConstants.kEncoderMaxPosition) {
+      restPosition = true;
+    } else {
+      restPosition = false;
+    }
     isFinished = false;
     initTime = Timer.getFPGATimestamp();
     stopTime = Timer.getFPGATimestamp() + duration;
@@ -39,13 +45,28 @@ public class ActuateToRest extends Command {
     double ratioToPos = ampSystem.getEncoderValue() / Constants.AmpSystemConstants.kEncoderMaxPosition;
     initTime = Timer.getFPGATimestamp();
 
-    if (ratioToPos < 0.05) {
-      ampSystem.setActuate(0);
-      isFinished = true;
-    } else if (ratioToPos < 0.5) {
-      ampSystem.setActuate(-0.2);
+    if (restPosition) {
+
+      if (ratioToPos > 0.95) {
+        ampSystem.setActuate(0);
+        isFinished = true;
+      } else if (ratioToPos > 0.5) {
+        ampSystem.setActuate(0.2);
+      } else {
+        ampSystem.setActuate(0.4);
+      }
+
     } else {
-      ampSystem.setActuate(-0.4);
+
+      if (ratioToPos < 0.05) {
+        ampSystem.setActuate(0);
+        isFinished = true;
+      } else if (ratioToPos < 0.5) {
+        ampSystem.setActuate(-0.2);
+      } else {
+        ampSystem.setActuate(-0.4);
+      }
+
     }
 
     if (initTime >= stopTime) {
@@ -58,9 +79,7 @@ public class ActuateToRest extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    ampSystem.setActuate(0);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

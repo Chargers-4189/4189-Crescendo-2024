@@ -9,6 +9,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.RecordPlaybackConstants;
 import frc.robot.Constants.ShuffleboardConstants;
 import frc.robot.commands.AutoShoot;
+import frc.robot.commands.AutoToggleActuate;
 import frc.robot.commands.CancelAll;
 import frc.robot.commands.DriveActuate;
 import frc.robot.commands.DriveClimbDown;
@@ -62,15 +63,12 @@ public class RobotContainer {
   private DriveClimbUp driveClimbUp = new DriveClimbUp(climb);
   private DriveClimbDown driveClimbDown = new DriveClimbDown(climb);
 
-  //private AutoOnboard autoOnboarder = new AutoOnboard(onboarder);
   //private OnboarderSystem onboarderSystem = new OnboarderSystem(onboarder, m_operatorController);
-  //private DriveOnboarder driveOnboarder = new DriveOnboarder(onboarder, m_operatorController);
   //private DriveActuate driveAcuate = new DriveActuate(m_operatorController, ampSystem);
 
   // Autonomous Commands
   private AutoShoot autoShootNote = new AutoShoot(ampSystem, shooter, onboarder);
-  //private PrimeShooter primeShooter = new PrimeShooter(shooter, onboarder);
-  //private ShootNote shootNote = new ShootNote(shooter, onboarder);
+  private AutoToggleActuate AutoToggleActuate = new AutoToggleActuate(ampSystem);
 
   // Shuffleboard Autonomous Tab
   private final ShuffleboardTab autoTab = Shuffleboard.getTab(ShuffleboardConstants.kAutonomousTab);
@@ -114,11 +112,12 @@ public class RobotContainer {
     cancelAll = new CancelAll(m_robotDrive, onboarder, shooter, climb, ampSystem);
     m_operatorController.button(5).onTrue(cancelAll);
 
-    m_operatorController.rightBumper().onTrue(autoShootNote);
+    m_operatorController.leftBumper().onTrue(autoShootNote);
+    m_operatorController.x().onTrue(AutoToggleActuate);
 
     // Manual Control
     m_operatorController.back().onTrue(driveShooter);
-    // WARNING: Manual Onboarder override is located in OnboarderSystem.java
+    // WARNING: Manual Onboarder override is located in OnboarderSystem.java (Default Command)
     m_operatorController.povUp().onTrue(driveClimbUp);
     m_operatorController.povUpLeft().onTrue(driveClimbUp);
     m_operatorController.povUpRight().onTrue(driveClimbUp);
