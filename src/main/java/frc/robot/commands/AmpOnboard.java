@@ -8,21 +8,27 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.AmpSystem;
+import frc.robot.subsystems.Onboarder;
+import frc.robot.subsystems.Shooter;
 
-public class ActuateToAmp extends Command {
-  /** Creates a new ActuateToAmp. */
+public class AmpOnboard extends Command {
+  /** Creates a new AmpOnboard. */
   private boolean isFinished;
   private double initTime = 0;
   private double stopTime = 0;
-  private double duration = 3;
+  private double duration = 5;
 
+  private Onboarder onboarder;
+  private Shooter shooter;
   private AmpSystem ampSystem;
 
-  public ActuateToAmp(AmpSystem ampSystem) {
+  public AmpOnboard(Onboarder onboarder, Shooter shooter, AmpSystem ampSystem) {
+    this.onboarder = onboarder;
+    this.shooter = shooter;
     this.ampSystem = ampSystem;
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(ampSystem);
+    addRequirements(onboarder, shooter, ampSystem);
   }
 
   // Called when the command is initially scheduled.
@@ -36,30 +42,32 @@ public class ActuateToAmp extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double ratioToPos = ampSystem.getEncoderValue() / Constants.AmpSystemConstants.kEncoderMaxPosition;
-    initTime = Timer.getFPGATimestamp();
-
-    if (ratioToPos > 0.95) {
-      ampSystem.setActuate(0);
-      isFinished = true;
-    } else if (ratioToPos > 0.5) {
-      ampSystem.setActuate(0.2);
+    if (!ampSystem.getAmpSensor()) {
+      onboarder.setOnboarder(1);
+      shooter.setShooter(Constants.ShooterConstants.kShooterLOWPowerValue);
+      ampSystem.setRoller(1);
     } else {
-      ampSystem.setActuate(0.4);
+      onboarder.setOnboarder(0);
+      shooter.setShooter(Constants.ShooterConstants.kShooterLOWPowerValue);
+      ampSystem.setRoller(0);
+      isFinished = true;
     }
 
     if (initTime >= stopTime) {
-      System.err.println("ERROR: ActuateToAmp has exceeded timeout limit. Stopping command");
+      System.err.println("ERROR: AmpOnboard has exceeded timeout limit. Stopping command.");
       ampSystem.setActuate(0);
       ampSystem.disableMotor();
       isFinished = true;
+      //throw new Exception(); For later.
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    ampSystem.setActuate(0);
+    onboarder.setOnboarder(0);
+    shooter.setShooter(0);
+    ampSystem.setRoller(0);
   }
 
   // Returns true when the command should end.

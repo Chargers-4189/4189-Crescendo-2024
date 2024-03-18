@@ -49,7 +49,7 @@ public class ActuateToRest extends Command {
     }
 
     if (initTime >= stopTime) {
-      System.err.println("ERROR: ACTUATOR HAS EXCEEDED TIMEOUT LIMIT");
+      System.err.println("ERROR: ActuateToRest has exceeded timeout limit. Stopping command");
       ampSystem.setActuate(0);
       ampSystem.disableMotor();
       isFinished = true;

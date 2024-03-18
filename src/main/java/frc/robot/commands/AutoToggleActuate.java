@@ -70,9 +70,8 @@ public class AutoToggleActuate extends Command {
     }
 
     if (initTime >= stopTime) {
-      System.err.println("ERROR: ACTUATOR HAS EXCEEDED TIMEOUT LIMIT");
+      System.err.println("ERROR: AutoToggleActuate has exceeded timeout limit. Stopping command.");
       ampSystem.setActuate(0);
-      ampSystem.disableMotor();
       isFinished = true;
     }
   }

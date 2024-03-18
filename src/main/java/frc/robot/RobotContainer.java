@@ -10,6 +10,7 @@ import frc.robot.Constants.RecordPlaybackConstants;
 import frc.robot.Constants.ShuffleboardConstants;
 import frc.robot.commands.Auto_Shoot;
 import frc.robot.commands.AutoToggleActuate;
+import frc.robot.commands.Auto_OnboardAmp;
 import frc.robot.commands.Auto_PlaceAmp;
 import frc.robot.commands.CancelAll;
 import frc.robot.commands.DriveActuate;
@@ -63,14 +64,15 @@ public class RobotContainer {
   private DriveShooter driveShooter = new DriveShooter(shooter);
   private DriveClimbUp driveClimbUp = new DriveClimbUp(climb);
   private DriveClimbDown driveClimbDown = new DriveClimbDown(climb);
+  private AutoToggleActuate autoToggleActuate = new AutoToggleActuate(ampSystem);
 
   //private OnboarderSystem onboarderSystem = new OnboarderSystem(onboarder, m_operatorController);
   //private DriveActuate driveAcuate = new DriveActuate(m_operatorController, ampSystem);
 
   // Autonomous Commands
   private Auto_Shoot autoShootNote = new Auto_Shoot(ampSystem, shooter, onboarder);
-  private AutoToggleActuate autoToggleActuate = new AutoToggleActuate(ampSystem);
   private Auto_PlaceAmp autoPlaceAmp = new Auto_PlaceAmp(ampSystem);
+  private Auto_OnboardAmp autoOnboardAmp = new Auto_OnboardAmp(ampSystem, onboarder, shooter);
 
   // Shuffleboard Autonomous Tab
   private final ShuffleboardTab autoTab = Shuffleboard.getTab(ShuffleboardConstants.kAutonomousTab);
@@ -116,7 +118,8 @@ public class RobotContainer {
 
     m_operatorController.leftBumper().onTrue(autoShootNote);
     m_operatorController.x().onTrue(autoToggleActuate);
-    m_operatorController.a().onTrue(autoPlaceAmp);
+    m_operatorController.b().onTrue(autoPlaceAmp);
+    m_operatorController.a().onTrue(autoOnboardAmp);
 
     // Manual Control
     m_operatorController.back().onTrue(driveShooter);
@@ -138,22 +141,22 @@ public class RobotContainer {
     new JoystickButton(rightStick, 1).onTrue(new OnboarderSystem(onboarder, m_operatorController, true, false));
     new JoystickButton(rightStick, 3).onTrue(driveShooter);
 
-    new JoystickButton(leftStick, 10).onTrue(new RunCommand(
+    new JoystickButton(leftStick, 10).whileTrue(new RunCommand(
         () -> {
           m_robotDrive.resetGyro();
         }
     ));
-    new JoystickButton(leftStick, 11).onTrue(new RunCommand(
+    new JoystickButton(leftStick, 11).whileTrue(new RunCommand(
         () -> {
           m_robotDrive.resetGyro();
         }
     ));
-    new JoystickButton(leftStick, 8).onTrue(new RunCommand(
+    new JoystickButton(leftStick, 8).whileTrue(new RunCommand(
         () -> {
           ampSystem.enableMotor();
         }
     ));
-    new JoystickButton(leftStick, 9).onTrue(new RunCommand(
+    new JoystickButton(leftStick, 9).whileTrue(new RunCommand(
         () -> {
           ampSystem.enableMotor();
         }

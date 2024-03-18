@@ -36,7 +36,7 @@ public class AmpOuttake extends Command {
   @Override
   public void execute() {
     initTime = Timer.getFPGATimestamp();
-    ampSystem.setRoller(1);
+    ampSystem.setRoller(-1);
 
     // Need to tie with Amp Sensor for better accuracy
     if (initTime >= stopTime) {
