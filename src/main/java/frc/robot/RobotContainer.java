@@ -8,8 +8,9 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.RecordPlaybackConstants;
 import frc.robot.Constants.ShuffleboardConstants;
-import frc.robot.commands.AutoShoot;
+import frc.robot.commands.Auto_Shoot;
 import frc.robot.commands.AutoToggleActuate;
+import frc.robot.commands.Auto_PlaceAmp;
 import frc.robot.commands.CancelAll;
 import frc.robot.commands.DriveActuate;
 import frc.robot.commands.DriveClimbDown;
@@ -67,8 +68,9 @@ public class RobotContainer {
   //private DriveActuate driveAcuate = new DriveActuate(m_operatorController, ampSystem);
 
   // Autonomous Commands
-  private AutoShoot autoShootNote = new AutoShoot(ampSystem, shooter, onboarder);
-  private AutoToggleActuate AutoToggleActuate = new AutoToggleActuate(ampSystem);
+  private Auto_Shoot autoShootNote = new Auto_Shoot(ampSystem, shooter, onboarder);
+  private AutoToggleActuate autoToggleActuate = new AutoToggleActuate(ampSystem);
+  private Auto_PlaceAmp autoPlaceAmp = new Auto_PlaceAmp(ampSystem);
 
   // Shuffleboard Autonomous Tab
   private final ShuffleboardTab autoTab = Shuffleboard.getTab(ShuffleboardConstants.kAutonomousTab);
@@ -113,7 +115,8 @@ public class RobotContainer {
     m_operatorController.button(5).onTrue(cancelAll);
 
     m_operatorController.leftBumper().onTrue(autoShootNote);
-    m_operatorController.x().onTrue(AutoToggleActuate);
+    m_operatorController.x().onTrue(autoToggleActuate);
+    m_operatorController.a().onTrue(autoPlaceAmp);
 
     // Manual Control
     m_operatorController.back().onTrue(driveShooter);
