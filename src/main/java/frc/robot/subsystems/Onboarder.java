@@ -5,6 +5,8 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -19,7 +21,11 @@ public class Onboarder extends SubsystemBase {
   /** Creates a new Onboarder. */
   private DigitalInput bumperSensor = new DigitalInput(Constants.OnboarderConstants.kIntakeBeamDIO);
   private DigitalInput shooterSensor = new DigitalInput(Constants.OnboarderConstants.kOutakeBeamDIO);
-  private WPI_VictorSPX onboardMotor = new WPI_VictorSPX(Constants.OnboarderConstants.konboardMotorcanID);
+  private WPI_VictorSPX onboardMotor = new WPI_VictorSPX(Constants.OnboarderConstants.konboardMotorCANID);
+  private TalonSRX OnboarderLight = new TalonSRX(Constants.OnboarderConstants.kOnboarderLightCANID);
+  private double maxBrightness = 0.1;
+  private double brightness;
+
 
   private ShuffleboardTab tab = Shuffleboard.getTab(Constants.ShuffleboardConstants.kAutonomousTab);
   private final GenericEntry booleanbox = tab.add("Intake", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
@@ -41,5 +47,19 @@ public class Onboarder extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     booleanbox.setBoolean(!this.bumperSensor.get());
+
+    if(getShooterSensor()){
+      OnboarderLight.set(TalonSRXControlMode.PercentOutput, maxBrightness);
+      System.out.println("Good");
+    }else if(getBumperSensor()){
+      OnboarderLight.set(TalonSRXControlMode.PercentOutput, maxBrightness);
+      System.out.println(brightness);
+      brightness-=0.005;
+      if(brightness<0){
+        brightness=.1;
+      }
+    }else{
+      OnboarderLight.set(TalonSRXControlMode.PercentOutput, 0);
+    }
   }
 }

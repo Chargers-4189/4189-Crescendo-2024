@@ -77,6 +77,6 @@ public class AmpSystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    System.out.println("Amp System - Encoder: " + getEncoderValue());
+    //System.out.println("Amp System - Encoder: " + getEncoderValue());
   }
 }
