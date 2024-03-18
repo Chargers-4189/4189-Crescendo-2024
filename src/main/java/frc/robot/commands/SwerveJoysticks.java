@@ -35,9 +35,10 @@ public class SwerveJoysticks extends PIDCommand {
          // }
           // Use the output here
           //drive.drive(xSpeed, ySpeed, output, true, true);
-          swerve.drive(xSpeed, ySpeed, rotationSpeed, true, true);
           if(xSpeed == 0 && ySpeed==0 && rotationSpeed == 0){
             swerve.setX();
+          } else {
+            swerve.drive(xSpeed, ySpeed, rotationSpeed, true, true);
           }
         });
         //absolute angle is tan inverse
