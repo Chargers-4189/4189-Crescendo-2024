@@ -14,7 +14,7 @@ public class PrimeShooter extends Command {
   private boolean isFinished;
   private double initTime = 0;
   private double stopTime = 0;
-  private double duration = 0.125;
+  private double duration = 1;
 
   private Shooter shooter;
   private Onboarder onboarder;
@@ -40,11 +40,12 @@ public class PrimeShooter extends Command {
   @Override
   public void execute() {
     initTime = Timer.getFPGATimestamp();
+    shooter.setShooter(Constants.ShooterConstants.kShooterPowerValue);
 
     if (!onboarder.getShooterSensor() || initTime >= stopTime) {
       onboarder.setOnboarder(0);
-      shooter.setShooter(Constants.ShooterConstants.kShooterPowerValue);
       isFinished = true;
+
     } else {
       onboarder.setOnboarder(-0.5);
     }
