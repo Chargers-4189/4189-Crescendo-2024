@@ -51,6 +51,8 @@ public class CancelAll extends Command {
       false,
       false
     );
+    ampSystem.setRoller(0.01);
+    ampSystem.setActuate(0.01);
 
     isFinished = true;
   }
@@ -68,6 +70,8 @@ public class CancelAll extends Command {
       false,
       false
     );
+    ampSystem.setRoller(0);
+    ampSystem.setActuate(0);
   }
 
   // Returns true when the command should end.
