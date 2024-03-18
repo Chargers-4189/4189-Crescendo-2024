@@ -113,15 +113,16 @@ public class RobotContainer {
   private void configureBindings() {
     // OPERATOR BUTTONS
     cancelAll = new CancelAll(m_robotDrive, onboarder, shooter, climb, ampSystem);
-    m_operatorController.button(5).onTrue(cancelAll);
+    m_operatorController.back().onTrue(cancelAll);
+    m_operatorController.start().onTrue(cancelAll);
 
     m_operatorController.leftBumper().onTrue(autoShootNote);
+    m_operatorController.rightBumper().onTrue(autoShootNote);
     m_operatorController.x().onTrue(autoToggleActuate);
     m_operatorController.b().onTrue(autoPlaceAmp);
     m_operatorController.a().onTrue(autoOnboardAmp);
 
     // Manual Control
-    m_operatorController.back().whileTrue(driveShooter);
     // WARNING: Manual Onboarder override is located in OnboarderSystem.java (Default Command)
     m_operatorController.povUp().whileTrue(driveClimbUp);
     m_operatorController.povUpLeft().whileTrue(driveClimbUp);
