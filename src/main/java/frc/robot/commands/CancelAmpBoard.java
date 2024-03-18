@@ -9,7 +9,7 @@ import frc.robot.subsystems.AmpSystem;
 import frc.robot.subsystems.Onboarder;
 import frc.robot.subsystems.Shooter;
 
-public class CancelAmpSystem extends Command {
+public class CancelAmpBoard extends Command {
   private boolean isFinished;
 
   Shooter shooter;
@@ -17,7 +17,7 @@ public class CancelAmpSystem extends Command {
   AmpSystem ampSystem;
 
   /** Creates a new CancelAll. */
-  public CancelAmpSystem(Onboarder onboarder, Shooter shooter, AmpSystem ampSystem) {
+  public CancelAmpBoard(Onboarder onboarder, Shooter shooter, AmpSystem ampSystem) {
     this.onboarder = onboarder;
     this.shooter = shooter;
     this.ampSystem = ampSystem;
