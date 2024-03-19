@@ -135,34 +135,34 @@ public class RobotContainer {
 
     // DRIVER BUTTONS
     playBackAuto = new PlayBack(m_robotDrive, onboarder, shooter, fileChooser, alliancebox);
-    new JoystickButton(rightStick, 7).onTrue(playBackAuto);
     new JoystickButton(leftStick, 6).onTrue(cancelAll);
     new JoystickButton(leftStick, 7).onTrue(cancelAll);
+    // Disabled to prevent accidentally playback. If testing, use autonomous period of FRC Drive Station.
+    //new JoystickButton(rightStick, 7).onTrue(playBackAuto);
 
     new JoystickButton(leftStick, 1).whileTrue(new OnboarderSystem(onboarder, m_operatorController, true, true));
     new JoystickButton(rightStick, 1).whileTrue(new OnboarderSystem(onboarder, m_operatorController, true, false));
     new JoystickButton(rightStick, 3).whileTrue(driveShooter);
 
-    new JoystickButton(leftStick, 10).whileTrue(new RunCommand(
-        () -> {
+    // Lambdas that don't need a command.
+    new JoystickButton(leftStick, 10).whileTrue(new RunCommand(() -> {
+      m_robotDrive.resetGyro();
+    }));
+    new JoystickButton(leftStick, 11).whileTrue(new RunCommand(() -> {
           m_robotDrive.resetGyro();
-        }
-    ));
-    new JoystickButton(leftStick, 11).whileTrue(new RunCommand(
-        () -> {
-          m_robotDrive.resetGyro();
-        }
-    ));
-    new JoystickButton(leftStick, 8).whileTrue(new RunCommand(
-        () -> {
+    }));
+    new JoystickButton(leftStick, 8).whileTrue(new RunCommand(() -> {
           ampSystem.enableMotor();
-        }
-    ));
-    new JoystickButton(leftStick, 9).whileTrue(new RunCommand(
-        () -> {
+    }));
+    new JoystickButton(leftStick, 9).whileTrue(new RunCommand(() -> {
           ampSystem.enableMotor();
-        }
-    ));
+    }));
+    new JoystickButton(rightStick, 8).whileTrue(new RunCommand(() -> {
+          ampSystem.resetEncoder();
+    }));
+    new JoystickButton(rightStick, 9).whileTrue(new RunCommand(() -> {
+          ampSystem.resetEncoder();
+    }));
   }
 
   /**
