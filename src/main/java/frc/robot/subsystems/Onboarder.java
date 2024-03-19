@@ -50,10 +50,10 @@ public class Onboarder extends SubsystemBase {
 
     if(getShooterSensor()){
       OnboarderLight.set(TalonSRXControlMode.PercentOutput, maxBrightness);
-      System.out.println("Good");
+      //System.out.println("Good");
     }else if(getBumperSensor()){
       OnboarderLight.set(TalonSRXControlMode.PercentOutput, maxBrightness);
-      System.out.println(brightness);
+      //System.out.println(brightness);
       brightness-=0.005;
       if(brightness<0){
         brightness=.1;

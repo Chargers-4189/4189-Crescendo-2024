@@ -4,7 +4,7 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,13 +18,22 @@ public class Shooter extends SubsystemBase {
   public Shooter() {}
 
   public void setShooter(double power) {
-    power = power * 9;
-    this.topMotor.setControl(new VelocityVoltage(-power));
-    this.bottomMotor.setControl(new VelocityVoltage(power));
+    power = power * 8.5;
+    double powerTop = power + 2;
+    double powerBottom = power -2;
+    if (power != 0) {
+      this.topMotor.setControl(new VoltageOut(-powerTop));
+      this.bottomMotor.setControl(new VoltageOut(powerBottom));
+    } else {
+      this.topMotor.setControl(new VoltageOut(0));
+      this.bottomMotor.setControl(new VoltageOut(0));
+    }
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    System.out.println("TOP MOTOR: " + topMotor.getVelocity());
+    System.out.println("BOT MOTOR: " + bottomMotor.getVelocity());
   }
 }
