@@ -14,7 +14,7 @@ public class PrimeShooter extends Command {
   private boolean isFinished;
   private double initTime = 0;
   private double stopTime = 0;
-  private double duration = 3;
+  private double duration = 2;
 
   private Shooter shooter;
   private Onboarder onboarder;

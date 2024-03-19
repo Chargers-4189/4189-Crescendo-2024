@@ -46,7 +46,7 @@ public class Onboarder extends SubsystemBase {
     if(getShooterSensor()){
       OnboarderLight.set(TalonSRXControlMode.PercentOutput, maxBrightness);
     }else if(getBumperSensor()){
-      if ((timer % 20) == 0) {
+      if ((timer % 25) < 12.5) { // 1/2 seconds flash
         OnboarderLight.set(TalonSRXControlMode.PercentOutput, maxBrightness);
       } else {
         OnboarderLight.set(TalonSRXControlMode.PercentOutput, 0);
