@@ -8,6 +8,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.RecordPlaybackConstants;
 import frc.robot.Constants.ShuffleboardConstants;
 import frc.robot.commands.Auto_Shoot;
+//import frc.robot.commands.AUTO_Playback;
 import frc.robot.commands.AutoToggleActuate;
 import frc.robot.commands.Auto_OnboardAmp;
 import frc.robot.commands.Auto_PlaceAmp;
@@ -79,6 +80,7 @@ public class RobotContainer {
   private final SendableChooser<File> fileChooser = new SendableChooser<>();
   // Playback
   private PlayBack playBackAuto;
+  //private AUTO_Playback AUTO_Playback;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -170,6 +172,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // Run currently selected playback file
+    //return new AUTO_Playback(ampSystem, m_robotDrive, onboarder, shooter, fileChooser, alliancebox);
     return new PlayBack(m_robotDrive, onboarder, shooter, fileChooser, alliancebox);
   }
 }
