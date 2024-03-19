@@ -24,7 +24,7 @@ public class Onboarder extends SubsystemBase {
   private WPI_VictorSPX onboardMotor = new WPI_VictorSPX(Constants.OnboarderConstants.konboardMotorCANID);
   private TalonSRX OnboarderLight = new TalonSRX(Constants.OnboarderConstants.kOnboarderLightCANID);
   private double maxBrightness = 0.1;
-  private double brightness;
+  private int timer = 0;
 
 
   private ShuffleboardTab tab = Shuffleboard.getTab(Constants.ShuffleboardConstants.kAutonomousTab);
@@ -42,24 +42,25 @@ public class Onboarder extends SubsystemBase {
   public void setOnboarder(double power) {
     onboardMotor.set(ControlMode.PercentOutput, -power);
   }
+  public void setDriverLight() {
+    if(getShooterSensor()){
+      OnboarderLight.set(TalonSRXControlMode.PercentOutput, maxBrightness);
+    }else if(getBumperSensor()){
+      if ((timer % 20) == 0) {
+        OnboarderLight.set(TalonSRXControlMode.PercentOutput, maxBrightness);
+      } else {
+        OnboarderLight.set(TalonSRXControlMode.PercentOutput, 0);
+      }
+    }else{
+      OnboarderLight.set(TalonSRXControlMode.PercentOutput, 0);
+    }
+  }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     booleanbox.setBoolean(!this.bumperSensor.get());
-
-    if(getShooterSensor()){
-      OnboarderLight.set(TalonSRXControlMode.PercentOutput, maxBrightness);
-      //System.out.println("Good");
-    }else if(getBumperSensor()){
-      OnboarderLight.set(TalonSRXControlMode.PercentOutput, maxBrightness);
-      //System.out.println(brightness);
-      brightness-=0.005;
-      if(brightness<0){
-        brightness=.1;
-      }
-    }else{
-      OnboarderLight.set(TalonSRXControlMode.PercentOutput, 0);
-    }
+    setDriverLight();
+    timer++;
   }
 }
