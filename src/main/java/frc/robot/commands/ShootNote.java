@@ -10,8 +10,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.Onboarder;
 import frc.robot.subsystems.Shooter;
 
-public class ShootNote extends Command {
-  private boolean isFinished;
+public class ShootNote extends Command {  private boolean isFinished;
   private double initTime = 0;
   private double stopTime = 0;
   private double duration = 1;

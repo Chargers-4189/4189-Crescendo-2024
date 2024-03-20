@@ -169,7 +169,7 @@ public final class Constants {
 
   public static final class OnboarderConstants {
     public static final int konboardMotorCANID = 8;
-    public static final int kOnboarderLightCANID = 18;
+    public static final int kOnboarderLightCANID = 15;
     public static final int kIntakeBeamDIO = 0;
     public static final int kOutakeBeamDIO = 1;
   }
@@ -182,14 +182,14 @@ public final class Constants {
   }
 
   public static final class ClimbConstants {
-    public static final int kClimbMotorID = 15;
+    public static final int kClimbMotorID = 12;
     public static final int kRestLimitDIO = 3;
     public static final int kExtendLimitDIO = 2;
   }
     
   public static final class AmpSystemConstants {
     public static final int kAcuatorCanID = 13;
-    public static final int kRollerCanID = 12;
+    public static final int kRollerCanID = 14;
     public static final int kEncoderADIO = 4;
     public static final int kEncoderBDIO = 5;
     public static final int kAmpSensorDIO = 9;
