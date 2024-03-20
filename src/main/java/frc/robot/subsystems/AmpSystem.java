@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -22,18 +23,21 @@ public class AmpSystem extends SubsystemBase {
 
   private DutyCycleEncoder encoder = new DutyCycleEncoder(Constants.AmpSystemConstants.kEncoderPWM);
   private DigitalInput ampSensor = new DigitalInput(Constants.AmpSystemConstants.kAmpSensorDIO);
+  private double startEncoderPosition = encoder.getAbsolutePosition();
 
   private WPI_TalonSRX actuator = new WPI_TalonSRX(Constants.AmpSystemConstants.kAcuatorCanID);
-  private WPI_TalonSRX roller = new WPI_TalonSRX(Constants.AmpSystemConstants.kRollerCanID);
+  private WPI_VictorSPX roller = new WPI_VictorSPX(Constants.AmpSystemConstants.kRollerCanID);
 
   public AmpSystem() {
     actuator.configContinuousCurrentLimit(10, 1);
+    encoder.setPositionOffset(0.8440);
   }
 
   public void setRoller(double power) {
     roller.set(ControlMode.PercentOutput, power);
   }
   public void setActuate(double power) {
+    /*
     if (power > 0) {
       if (encoderTicks < restLimit) {
         this.actuatorPower = power;
@@ -49,6 +53,8 @@ public class AmpSystem extends SubsystemBase {
     } else {
         this.actuatorPower = 0;
     }
+    */
+    this.actuatorPower = power;
     if (!disableMotor) {
       actuator.set(ControlMode.PercentOutput, this.actuatorPower);
     }
@@ -58,11 +64,12 @@ public class AmpSystem extends SubsystemBase {
     return this.ampSensor.get();
   }
   public double getEncoderValue() {
-    this.encoderTicks = encoder.get();
+    this.encoderTicks = encoder.getAbsolutePosition() - this.startEncoderPosition;
     return this.encoderTicks;
   }
   public void resetEncoder() {
-   encoder.reset();
+   this.startEncoderPosition = encoder.getAbsolutePosition();
+   System.out.println("RESETING ENCODER");
   }
 
   public void disableMotor() {
@@ -81,6 +88,6 @@ public class AmpSystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    //System.out.println("Amp System - Encoder: " + getEncoderValue());
+    System.out.println("Amp System - Encoder: " + encoder.getAbsolutePosition());
   }
 }

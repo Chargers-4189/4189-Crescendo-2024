@@ -183,17 +183,17 @@ public final class Constants {
 
   public static final class ClimbConstants {
     public static final int kClimbMotorID = 12;
-    public static final int kRestLimitDIO = 3;
-    public static final int kExtendLimitDIO = 2;
+    public static final int kRestLimitDIO = 5;
+    public static final int kExtendLimitDIO = 4;
   }
     
   public static final class AmpSystemConstants {
     public static final int kAcuatorCanID = 13;
     public static final int kRollerCanID = 14;
-    public static final int kEncoderPWM = 0;
+    public static final int kEncoderPWM = 3;
     public static final int kAmpSensorDIO = 9;
 
-    public static final int kEncoderMaxPosition = 500;
+    public static final double kEncoderMaxPosition = 0.42538;
     public static final double kAcuateTimeoutLimit = 3;
     public static final double kNoteTransferTimeoutLimit = 5;
   }

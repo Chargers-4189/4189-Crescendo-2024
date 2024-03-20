@@ -39,9 +39,9 @@ public class ActuateToAmp extends Command {
       ampSystem.setActuate(0);
       isFinished = true;
     } else if (ratioToPos > 0.5) {
-      ampSystem.setActuate(0.2);
-    } else {
       ampSystem.setActuate(0.4);
+    } else {
+      ampSystem.setActuate(0.8);
     }
 
     if (timeout.hasTriggered()) {

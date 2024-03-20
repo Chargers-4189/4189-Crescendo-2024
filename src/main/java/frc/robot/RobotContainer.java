@@ -35,7 +35,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -145,22 +145,22 @@ public class RobotContainer {
     new JoystickButton(rightStick, 3).whileTrue(driveShooter);
 
     // Lambdas that don't need a command
-    new JoystickButton(leftStick, 10).whileTrue(new RunCommand(() -> {
+    new JoystickButton(leftStick, 10).onTrue(new InstantCommand(() -> {
       m_robotDrive.resetGyro();
     }));
-    new JoystickButton(leftStick, 11).whileTrue(new RunCommand(() -> {
+    new JoystickButton(leftStick, 11).onTrue(new InstantCommand(() -> {
           m_robotDrive.resetGyro();
     }));
-    new JoystickButton(leftStick, 8).whileTrue(new RunCommand(() -> {
+    new JoystickButton(leftStick, 8).onTrue(new InstantCommand(() -> {
           ampSystem.enableMotor();
     }));
-    new JoystickButton(leftStick, 9).whileTrue(new RunCommand(() -> {
+    new JoystickButton(leftStick, 9).onTrue(new InstantCommand(() -> {
           ampSystem.enableMotor();
     }));
-    new JoystickButton(rightStick, 8).whileTrue(new RunCommand(() -> {
+    new JoystickButton(rightStick, 8).onTrue(new InstantCommand(() -> {
           ampSystem.resetEncoder();
     }));
-    new JoystickButton(rightStick, 9).whileTrue(new RunCommand(() -> {
+    new JoystickButton(rightStick, 9).onTrue(new InstantCommand(() -> {
           ampSystem.resetEncoder();
     }));
   }

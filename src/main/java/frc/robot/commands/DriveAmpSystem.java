@@ -28,12 +28,20 @@ public class DriveActuate extends Command {
   @Override
   public void execute() {
     ampSystem.setActuate(operatorController.getRightY());
+    if (operatorController.getLeftTriggerAxis() != 0) {
+      ampSystem.setRoller(operatorController.getLeftTriggerAxis());
+    } else if (operatorController.getRightTriggerAxis() != 0) {
+      ampSystem.setRoller(-operatorController.getRightTriggerAxis());
+    } else {
+      ampSystem.setRoller(0);
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     ampSystem.setActuate(0);
+    ampSystem.setRoller(0);
   }
 
   // Returns true when the command should end.

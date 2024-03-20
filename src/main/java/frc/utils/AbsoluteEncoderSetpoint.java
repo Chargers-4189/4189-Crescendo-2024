@@ -6,29 +6,22 @@ public class AbsoluteEncoderSetpoint {
     
     private DutyCycleEncoder encoder;
     private double setpoint;
-
-    public AbsoluteEncoderSetpoint(DutyCycleEncoder encoder, double setPoint){
+    private boolean above;
+    public AbsoluteEncoderSetpoint(DutyCycleEncoder encoder, double setPoint, boolean above){
         this.encoder = encoder;
         this.setpoint = setPoint;
+        this.above = above;
     }
 
     public double getAbsolutePosition(){
         return encoder.getAbsolutePosition();
     }
 
-    public double getPercentageAbove(){
-        return getAbsolutePosition() / setpoint;
-    }
-
-    public double getPercentageBelow(){
-        return setpoint / getAbsolutePosition();
-    }
-
-    public boolean isTopTriggered(){
-        return getPercentageAbove() >= 1;
-    }
-
-    public boolean isBottomTriggered(){
-        return getPercentageBelow() >= 1;
+    public boolean isTriggered(){
+        if(above){
+            return getAbsolutePosition() > setpoint;
+        } else {
+            return setpoint > getAbsolutePosition();
+        }
     }
 }

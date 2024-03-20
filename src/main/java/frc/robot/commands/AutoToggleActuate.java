@@ -47,9 +47,9 @@ public class AutoToggleActuate extends Command {
         ampSystem.setActuate(0);
         isFinished = true;
       } else if (ratioToPos > 0.5) {
-        ampSystem.setActuate(0.2);
+        ampSystem.setActuate(0.5);
       } else {
-        ampSystem.setActuate(0.4);
+        ampSystem.setActuate(1);
       }
 
     } else {
@@ -58,17 +58,18 @@ public class AutoToggleActuate extends Command {
         ampSystem.setActuate(0);
         isFinished = true;
       } else if (ratioToPos < 0.5) {
-        ampSystem.setActuate(-0.2);
+        ampSystem.setActuate(-0.5);
       } else {
-        ampSystem.setActuate(-0.4);
+        ampSystem.setActuate(-1);
       }
 
     }
 
+    System.out.println(ratioToPos);
     if (timeout.hasTriggered()) {
       ampSystem.setActuate(0);
       ampSystem.disableMotor();
-      throw new Error("AutoToggleActuate has exceeded timeout limit");
+      //throw new Error("AutoToggleActuate has exceeded timeout limit");
     }
   }
 
