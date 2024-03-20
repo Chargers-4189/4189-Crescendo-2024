@@ -4,16 +4,15 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Onboarder;
 import frc.robot.subsystems.Shooter;
+import frc.utils.Alarm;
 
-public class ShootNote extends Command {  private boolean isFinished;
-  private double initTime = 0;
-  private double stopTime = 0;
-  private double duration = 1;
+public class ShootNote extends Command {  
+  private boolean isFinished;
+  private Alarm timer = new Alarm(1);
 
   private Shooter shooter;
   private Onboarder onboarder;
@@ -31,18 +30,15 @@ public class ShootNote extends Command {  private boolean isFinished;
   @Override
   public void initialize() {
     isFinished = false;
-    initTime = Timer.getFPGATimestamp();
-    stopTime = Timer.getFPGATimestamp() + duration;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    initTime = Timer.getFPGATimestamp();
     shooter.setShooter(Constants.ShooterConstants.kShooterPowerValue);
     onboarder.setOnboarder(1);
 
-    if (initTime >= stopTime) {
+    if (timer.hasTriggered()) {
       isFinished = true;
     }
   }

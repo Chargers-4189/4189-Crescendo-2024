@@ -4,21 +4,18 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.AmpSystem;
 import frc.robot.subsystems.Onboarder;
 import frc.robot.subsystems.Shooter;
+import frc.utils.Alarm;
 
 public class AmpOnboard extends Command {
   /** Creates a new AmpOnboard. */
   private boolean isFinished;
-  private double initTime = 0;
-  private double stopTime = 0;
-  private double timeoutTime = 0;
-  private double duration = 3;
-  private double timeout = Constants.AmpSystemConstants.kNoteTransferTimeoutLimit;
+  private Alarm timer = new Alarm(3);
+  private Alarm timeout = new Alarm(Constants.AmpSystemConstants.kNoteTransferTimeoutLimit);
 
   private Onboarder onboarder;
   private Shooter shooter;
@@ -37,16 +34,13 @@ public class AmpOnboard extends Command {
   @Override
   public void initialize() {
     isFinished = false;
-    initTime = Timer.getFPGATimestamp();
-    stopTime = Timer.getFPGATimestamp() + duration;
-    timeoutTime = Timer.getFPGATimestamp() + timeout;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    if (ampSystem.getAmpSensor() && initTime >= stopTime) {
+    if (ampSystem.getAmpSensor() && timer.hasTriggered()) {
       onboarder.setOnboarder(0);
       shooter.setShooter(Constants.ShooterConstants.kShooterLOWPowerValue);
       ampSystem.setRoller(0);
@@ -57,7 +51,7 @@ public class AmpOnboard extends Command {
       ampSystem.setRoller(1);
     }
 
-    if (initTime >= timeoutTime) {
+    if (timeout.hasTriggered()) {
       ampSystem.setActuate(0);
       ampSystem.disableMotor();
       throw new Error("AmpOnboard has exceeded timeout limit");

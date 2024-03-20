@@ -4,16 +4,14 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.AmpSystem;
+import frc.utils.Alarm;
 
 public class AmpOuttake extends Command {
   /** Creates a new AmpOuttake. */
   private boolean isFinished;
-  private double initTime = 0;
-  private double stopTime = 0;
-  private double duration = 2;
+  private Alarm timer = new Alarm(2);
 
   private AmpSystem ampSystem;
 
@@ -28,18 +26,15 @@ public class AmpOuttake extends Command {
   @Override
   public void initialize() {
     isFinished = false;
-    initTime = Timer.getFPGATimestamp();
-    stopTime = Timer.getFPGATimestamp() + duration;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    initTime = Timer.getFPGATimestamp();
     ampSystem.setRoller(-1);
 
     // Need to tie with Amp Sensor for better accuracy
-    if (initTime >= stopTime) {
+    if (timer.hasTriggered()) {
       isFinished = true;
     }
   }
