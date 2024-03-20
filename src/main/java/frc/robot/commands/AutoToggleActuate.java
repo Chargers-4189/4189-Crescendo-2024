@@ -4,17 +4,15 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.AmpSystem;
+import frc.utils.Alarm;
 
 public class AutoToggleActuate extends Command {
   /** Creates a new AutoToggleActuate. */
   private boolean isFinished;
-  private double initTime = 0;
-  private double timeoutTime = 0;
-  private double timeout = Constants.AmpSystemConstants.kAcuateTimeoutLimit;
+  private Alarm timeout = new Alarm(Constants.AmpSystemConstants.kAcuateTimeoutLimit);
 
   private AmpSystem ampSystem;
   private boolean restPosition = true;
@@ -35,15 +33,12 @@ public class AutoToggleActuate extends Command {
       restPosition = false;
     }
     isFinished = false;
-    initTime = Timer.getFPGATimestamp();
-    timeoutTime = Timer.getFPGATimestamp() + timeout;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     double ratioToPos = ampSystem.getEncoderValue() / Constants.AmpSystemConstants.kEncoderMaxPosition;
-    initTime = Timer.getFPGATimestamp();
 
     if (restPosition) {
 
@@ -69,7 +64,7 @@ public class AutoToggleActuate extends Command {
 
     }
 
-    if (initTime >= timeoutTime) {
+    if (timeout.hasTriggered()) {
       ampSystem.setActuate(0);
       ampSystem.disableMotor();
       throw new Error("AutoToggleActuate has exceeded timeout limit");
