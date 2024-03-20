@@ -17,9 +17,9 @@ import frc.robot.subsystems.Shooter;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class AUTO_Playback extends ParallelCommandGroup {
+public class Auton_Playback extends ParallelCommandGroup {
   /** Creates a new AUTO_Playback. */
-  public AUTO_Playback(AmpSystem ampSystem, DriveSubsystem swerve, Onboarder onboarder, Shooter shooter, SendableChooser<File> playbackFile, GenericEntry AllianceBox) {
+  public Auton_Playback(AmpSystem ampSystem, DriveSubsystem swerve, Onboarder onboarder, Shooter shooter, SendableChooser<File> playbackFile, GenericEntry AllianceBox) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(new ActuateToAmp(ampSystem), new PlayBack(swerve, onboarder, shooter, playbackFile, AllianceBox));
