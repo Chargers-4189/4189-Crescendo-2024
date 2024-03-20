@@ -8,7 +8,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -20,7 +20,7 @@ public class AmpSystem extends SubsystemBase {
   private double actuatorPower = 0;
   private boolean disableMotor = false;
 
-  private Encoder encoder = new Encoder(Constants.AmpSystemConstants.kEncoderADIO, Constants.AmpSystemConstants.kEncoderBDIO);
+  private DutyCycleEncoder encoder = new DutyCycleEncoder(Constants.AmpSystemConstants.kEncoderPWM);
   private DigitalInput ampSensor = new DigitalInput(Constants.AmpSystemConstants.kAmpSensorDIO);
 
   private WPI_TalonSRX actuator = new WPI_TalonSRX(Constants.AmpSystemConstants.kAcuatorCanID);
@@ -72,6 +72,10 @@ public class AmpSystem extends SubsystemBase {
   public void enableMotor() {
     this.disableMotor = false;
     actuator.set(ControlMode.PercentOutput, 0);
+  }
+
+  public DutyCycleEncoder getEncoderObject() {
+    return this.encoder;
   }
 
   @Override

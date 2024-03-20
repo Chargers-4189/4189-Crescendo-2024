@@ -190,8 +190,7 @@ public final class Constants {
   public static final class AmpSystemConstants {
     public static final int kAcuatorCanID = 13;
     public static final int kRollerCanID = 14;
-    public static final int kEncoderADIO = 4;
-    public static final int kEncoderBDIO = 5;
+    public static final int kEncoderPWM = 0;
     public static final int kAmpSensorDIO = 9;
 
     public static final int kEncoderMaxPosition = 500;
