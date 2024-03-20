@@ -16,36 +16,34 @@ import frc.robot.Constants;
 public class AmpSystem extends SubsystemBase {
   /** Creates a new AmpSystem. */
   private double encoderTicks;
-  private double restLimit = 0;
-  private double extendLimit = Constants.AmpSystemConstants.kEncoderMaxPosition;
   private double actuatorPower = 0;
   private boolean disableMotor = false;
 
   private DutyCycleEncoder encoder = new DutyCycleEncoder(Constants.AmpSystemConstants.kEncoderPWM);
   private DigitalInput ampSensor = new DigitalInput(Constants.AmpSystemConstants.kAmpSensorDIO);
-  private double startEncoderPosition = encoder.getAbsolutePosition();
 
   private WPI_TalonSRX actuator = new WPI_TalonSRX(Constants.AmpSystemConstants.kAcuatorCanID);
   private WPI_VictorSPX roller = new WPI_VictorSPX(Constants.AmpSystemConstants.kRollerCanID);
 
+  private double restLimit = encoder.getAbsolutePosition();
+  private double extendLimit = Constants.AmpSystemConstants.kEncoderAmpPosition;
+
   public AmpSystem() {
     actuator.configContinuousCurrentLimit(10, 1);
-    encoder.setPositionOffset(0.8440);
   }
 
   public void setRoller(double power) {
     roller.set(ControlMode.PercentOutput, power);
   }
   public void setActuate(double power) {
-    /*
     if (power > 0) {
-      if (encoderTicks < restLimit) {
+      if (getEncoderValue() < restLimit) {
         this.actuatorPower = power;
       }else{
         this.actuatorPower = 0;
       }
     } else if (power < 0) {
-      if (encoderTicks > extendLimit) {
+      if (getEncoderValue() > extendLimit) {
         this.actuatorPower = power;
       } else {
         this.actuatorPower = 0;
@@ -53,8 +51,6 @@ public class AmpSystem extends SubsystemBase {
     } else {
         this.actuatorPower = 0;
     }
-    */
-    this.actuatorPower = power;
     if (!disableMotor) {
       actuator.set(ControlMode.PercentOutput, this.actuatorPower);
     }
@@ -64,12 +60,15 @@ public class AmpSystem extends SubsystemBase {
     return this.ampSensor.get();
   }
   public double getEncoderValue() {
-    this.encoderTicks = encoder.getAbsolutePosition() - this.startEncoderPosition;
+    this.encoderTicks = encoder.getAbsolutePosition();
     return this.encoderTicks;
   }
+  public double getRestPosition() {
+    return restLimit;
+  }
   public void resetEncoder() {
-   this.startEncoderPosition = encoder.getAbsolutePosition();
-   System.out.println("RESETING ENCODER");
+    restLimit = encoder.getAbsolutePosition();
+    System.out.println("AmpSystem Encoder Reset");
   }
 
   public void disableMotor() {

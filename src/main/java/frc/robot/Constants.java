@@ -193,7 +193,8 @@ public final class Constants {
     public static final int kEncoderPWM = 3;
     public static final int kAmpSensorDIO = 9;
 
-    public static final double kEncoderMaxPosition = 0.42538;
+    public static final double kEncoderRestPosition = 0.8460;
+    public static final double kEncoderAmpPosition = 0.4136;
     public static final double kAcuateTimeoutLimit = 3;
     public static final double kNoteTransferTimeoutLimit = 5;
   }

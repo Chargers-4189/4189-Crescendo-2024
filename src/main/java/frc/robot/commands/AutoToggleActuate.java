@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.AmpSystem;
+import frc.utils.AbsoluteEncoderSetpoint;
 import frc.utils.Alarm;
 
 public class AutoToggleActuate extends Command {
@@ -16,6 +17,9 @@ public class AutoToggleActuate extends Command {
 
   private AmpSystem ampSystem;
   private boolean restPosition = true;
+  private AbsoluteEncoderSetpoint ampEncoderToAmp = new AbsoluteEncoderSetpoint(ampSystem.getEncoderObject(), Constants.AmpSystemConstants.kEncoderAmpPosition, true);
+  private AbsoluteEncoderSetpoint ampEncoderToRest = new AbsoluteEncoderSetpoint(ampSystem.getEncoderObject(), ampSystem.getRestPosition(), false);
+
 
 
   public AutoToggleActuate(AmpSystem ampSystem) {
@@ -27,7 +31,7 @@ public class AutoToggleActuate extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (ampSystem.getEncoderValue() < 0.1 * Constants.AmpSystemConstants.kEncoderMaxPosition) {
+    if (ampSystem.getEncoderValue() < (1.1 * Constants.AmpSystemConstants.kEncoderRestPosition)) {
       restPosition = true;
     } else {
       restPosition = false;
@@ -39,37 +43,32 @@ public class AutoToggleActuate extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double ratioToPos = ampSystem.getEncoderValue() / Constants.AmpSystemConstants.kEncoderMaxPosition;
 
     if (restPosition) {
 
-      if (ratioToPos > 0.95) {
+      if (ampEncoderToAmp.isTriggered()) {
         ampSystem.setActuate(0);
         isFinished = true;
-      } else if (ratioToPos > 0.5) {
-        ampSystem.setActuate(0.5);
       } else {
         ampSystem.setActuate(1);
       }
 
     } else {
 
-      if (ratioToPos < 0.05) {
+      if (ampEncoderToRest.isTriggered()) {
         ampSystem.setActuate(0);
         isFinished = true;
-      } else if (ratioToPos < 0.5) {
-        ampSystem.setActuate(-0.5);
       } else {
-        ampSystem.setActuate(-1);
+        ampSystem.setActuate(1);
       }
 
     }
 
-    System.out.println(ratioToPos);
     if (timeout.hasTriggered()) {
       ampSystem.setActuate(0);
       ampSystem.disableMotor();
-      //throw new Error("AutoToggleActuate has exceeded timeout limit");
+      System.err.println("AutoToggleActuate has exceeded timeout limit");
+      isFinished = true;
     }
   }
 

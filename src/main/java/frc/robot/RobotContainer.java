@@ -13,7 +13,7 @@ import frc.robot.commands.AutoToggleActuate;
 import frc.robot.commands.Auto_OnboardAmp;
 import frc.robot.commands.Auto_PlaceAmp;
 import frc.robot.commands.CancelAll;
-import frc.robot.commands.DriveActuate;
+import frc.robot.commands.DriveAmpSystem;
 import frc.robot.commands.DriveClimbDown;
 import frc.robot.commands.DriveClimbUp;
 import frc.robot.commands.DriveShooter;
@@ -99,7 +99,7 @@ public class RobotContainer {
 
     // Configure default commands
     onboarder.setDefaultCommand(new OnboarderSystem(onboarder, m_operatorController, false, false));
-    ampSystem.setDefaultCommand(new DriveActuate(m_operatorController, ampSystem));
+    ampSystem.setDefaultCommand(new DriveAmpSystem(m_operatorController, ampSystem));
     m_robotDrive.setDefaultCommand(new SwerveJoysticks(m_robotDrive, leftStick, rightStick));
   }
 

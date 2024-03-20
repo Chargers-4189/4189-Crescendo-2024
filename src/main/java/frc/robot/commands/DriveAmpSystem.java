@@ -8,11 +8,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.AmpSystem;
 
-public class DriveActuate extends Command {
+public class DriveAmpSystem extends Command {
   private AmpSystem ampSystem;
   private CommandXboxController operatorController;
   /** Creates a new DriveActuate. */
-  public DriveActuate(CommandXboxController operatorController, AmpSystem ampSystem) {
+  public DriveAmpSystem(CommandXboxController operatorController, AmpSystem ampSystem) {
     this.ampSystem = ampSystem;
     this.operatorController = operatorController;
 

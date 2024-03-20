@@ -7,14 +7,15 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.AmpSystem;
+import frc.utils.AbsoluteEncoderSetpoint;
 import frc.utils.Alarm;
 
 public class ActuateToAmp extends Command {
   /** Creates a new ActuateToAmp. */
+  private AmpSystem ampSystem;
   private boolean isFinished;
   private Alarm timeout = new Alarm(Constants.AmpSystemConstants.kAcuateTimeoutLimit);
-
-  private AmpSystem ampSystem;
+  private AbsoluteEncoderSetpoint ampEncoder = new AbsoluteEncoderSetpoint(ampSystem.getEncoderObject(), Constants.AmpSystemConstants.kEncoderAmpPosition, true);
 
   public ActuateToAmp(AmpSystem ampSystem) {
     this.ampSystem = ampSystem;
@@ -33,15 +34,11 @@ public class ActuateToAmp extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double ratioToPos = ampSystem.getEncoderValue() / Constants.AmpSystemConstants.kEncoderMaxPosition;
-
-    if (ratioToPos > 0.95) {
+    if (ampEncoder.isTriggered()) {
       ampSystem.setActuate(0);
       isFinished = true;
-    } else if (ratioToPos > 0.5) {
-      ampSystem.setActuate(0.4);
     } else {
-      ampSystem.setActuate(0.8);
+      ampSystem.setActuate(1);
     }
 
     if (timeout.hasTriggered()) {
