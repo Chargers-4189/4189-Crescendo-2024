@@ -26,6 +26,7 @@ public class AmpIntake extends Command {
   @Override
   public void initialize() {
     isFinished = false;
+    timer.initAlarm();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

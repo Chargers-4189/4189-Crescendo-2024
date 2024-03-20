@@ -27,6 +27,7 @@ public class ActuateToRest extends Command {
   @Override
   public void initialize() {
     isFinished = false;
+    timeout.initAlarm();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

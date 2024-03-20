@@ -33,6 +33,7 @@ public class AutoToggleActuate extends Command {
       restPosition = false;
     }
     isFinished = false;
+    timeout.initAlarm();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
