@@ -23,7 +23,7 @@ public class Onboarder extends SubsystemBase {
   private DigitalInput shooterSensor = new DigitalInput(Constants.OnboarderConstants.kOutakeBeamDIO);
   private WPI_VictorSPX onboardMotor = new WPI_VictorSPX(Constants.OnboarderConstants.konboardMotorCANID);
   private TalonSRX OnboarderLight = new TalonSRX(Constants.OnboarderConstants.kOnboarderLightCANID);
-  private double maxBrightness = 0.1;
+  private double maxBrightness = 1;
   private int timer = 0;
 
 

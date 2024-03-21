@@ -4,7 +4,7 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.subsystems.AmpSystem;
 import frc.robot.subsystems.Onboarder;
 import frc.robot.subsystems.Shooter;
@@ -12,16 +12,16 @@ import frc.robot.subsystems.Shooter;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class Auto_OnboardAmp extends SequentialCommandGroup {
-  /** Creates a new AutoOnboardAmp. */
-  public Auto_OnboardAmp(AmpSystem ampSystem, Onboarder onboarder, Shooter shooter) {
+public class Auto_ShootP extends ParallelCommandGroup {
+  /** Creates a new Auto_ShootP. */
+  public Auto_ShootP(AmpSystem ampSystem, Shooter shooter, Onboarder onboarder) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     try {
-      addCommands(new ActuateToRest(ampSystem), new AmpOnboard(onboarder, shooter, ampSystem));
+      addCommands(new ActuateToAmp(ampSystem), new PrimeShootNote(shooter, onboarder));
     } catch (Exception e) {
       addCommands(new CancelAmpBoard(onboarder, shooter, ampSystem));
-      System.out.println("Failed to AutoOnboard");
+      System.err.println("Failed to AutoShoot");
       e.printStackTrace();
     }
   }

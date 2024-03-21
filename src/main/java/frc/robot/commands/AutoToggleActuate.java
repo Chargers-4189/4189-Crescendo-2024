@@ -7,7 +7,6 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.AmpSystem;
-import frc.utils.AbsoluteEncoderSetpoint;
 import frc.utils.Alarm;
 
 public class AutoToggleActuate extends Command {
@@ -16,13 +15,10 @@ public class AutoToggleActuate extends Command {
   private Alarm timeout = new Alarm(Constants.AmpSystemConstants.kAcuateTimeoutLimit);
 
   private AmpSystem ampSystem;
-  private boolean restPosition = true;
-  private AbsoluteEncoderSetpoint ampEncoderToAmp = new AbsoluteEncoderSetpoint(ampSystem.getEncoderObject(), Constants.AmpSystemConstants.kEncoderAmpPosition, true);
-  private AbsoluteEncoderSetpoint ampEncoderToRest = new AbsoluteEncoderSetpoint(ampSystem.getEncoderObject(), ampSystem.getRestPosition(), false);
-
-
+  private boolean restPosition;
 
   public AutoToggleActuate(AmpSystem ampSystem) {
+    System.err.println("Hello WOrld");
     this.ampSystem = ampSystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(ampSystem);
@@ -31,7 +27,7 @@ public class AutoToggleActuate extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (ampSystem.getEncoderValue() < (1.1 * Constants.AmpSystemConstants.kEncoderRestPosition)) {
+    if (ampSystem.getEncoderValue() > 0.6) {
       restPosition = true;
     } else {
       restPosition = false;
@@ -43,19 +39,18 @@ public class AutoToggleActuate extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
     if (restPosition) {
 
-      if (ampEncoderToAmp.isTriggered()) {
+      if (ampSystem.getEncoderValue() <= Constants.AmpSystemConstants.kEncoderAmpPosition) {
         ampSystem.setActuate(0);
         isFinished = true;
       } else {
-        ampSystem.setActuate(1);
+        ampSystem.setActuate(-1);
       }
 
     } else {
 
-      if (ampEncoderToRest.isTriggered()) {
+      if (ampSystem.getEncoderValue() >= ampSystem.getRestPosition()) {
         ampSystem.setActuate(0);
         isFinished = true;
       } else {

@@ -8,6 +8,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.RecordPlaybackConstants;
 import frc.robot.Constants.ShuffleboardConstants;
 import frc.robot.commands.Auto_Shoot;
+import frc.robot.commands.Auto_ShootP;
 //import frc.robot.commands.AUTO_Playback;
 import frc.robot.commands.AutoToggleActuate;
 import frc.robot.commands.Auto_OnboardAmp;
@@ -73,6 +74,7 @@ public class RobotContainer {
   private Auto_Shoot autoShootNote = new Auto_Shoot(ampSystem, shooter, onboarder);
   private Auto_PlaceAmp autoPlaceAmp = new Auto_PlaceAmp(ampSystem);
   private Auto_OnboardAmp autoOnboardAmp = new Auto_OnboardAmp(ampSystem, onboarder, shooter);
+  private Auto_ShootP autoShootP = new Auto_ShootP(ampSystem, shooter, onboarder);
 
   // Shuffleboard Autonomous Tab
   private final ShuffleboardTab autoTab = Shuffleboard.getTab(ShuffleboardConstants.kAutonomousTab);

@@ -11,7 +11,7 @@ import frc.utils.Alarm;
 public class AmpOuttake extends Command {
   /** Creates a new AmpOuttake. */
   private boolean isFinished;
-  private Alarm timer = new Alarm(2);
+  private Alarm timer = new Alarm(1);
 
   private AmpSystem ampSystem;
 
@@ -32,7 +32,7 @@ public class AmpOuttake extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    ampSystem.setRoller(-1);
+    ampSystem.setRoller(1);
 
     // Need to tie with Amp Sensor for better accuracy
     if (timer.hasTriggered()) {

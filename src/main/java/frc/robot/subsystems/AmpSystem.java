@@ -25,7 +25,7 @@ public class AmpSystem extends SubsystemBase {
   private WPI_TalonSRX actuator = new WPI_TalonSRX(Constants.AmpSystemConstants.kAcuatorCanID);
   private WPI_VictorSPX roller = new WPI_VictorSPX(Constants.AmpSystemConstants.kRollerCanID);
 
-  private double restLimit = encoder.getAbsolutePosition();
+  private double restLimit = Constants.AmpSystemConstants.kEncoderRestPosition;
   private double extendLimit = Constants.AmpSystemConstants.kEncoderAmpPosition;
 
   public AmpSystem() {
@@ -36,13 +36,13 @@ public class AmpSystem extends SubsystemBase {
     roller.set(ControlMode.PercentOutput, power);
   }
   public void setActuate(double power) {
-    if (power > 0) {
+    /*if (power > 0) {
       if (getEncoderValue() < restLimit) {
         this.actuatorPower = power;
       }else{
         this.actuatorPower = 0;
       }
-    } else if (power < 0) {
+    } else*/ if (power < 0) {
       if (getEncoderValue() > extendLimit) {
         this.actuatorPower = power;
       } else {
@@ -51,6 +51,7 @@ public class AmpSystem extends SubsystemBase {
     } else {
         this.actuatorPower = 0;
     }
+    this.actuatorPower = power;
     if (!disableMotor) {
       actuator.set(ControlMode.PercentOutput, this.actuatorPower);
     }
@@ -67,7 +68,7 @@ public class AmpSystem extends SubsystemBase {
     return restLimit;
   }
   public void resetEncoder() {
-    restLimit = encoder.getAbsolutePosition();
+    //restLimit = encoder.getAbsolutePosition();
     System.out.println("AmpSystem Encoder Reset");
   }
 
@@ -87,6 +88,7 @@ public class AmpSystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    System.out.println("Amp System - Encoder: " + encoder.getAbsolutePosition());
+    //System.out.println("Amp System - Encoder: " + encoder.getAbsolutePosition());
+    //System.out.println(ampSensor.);
   }
 }

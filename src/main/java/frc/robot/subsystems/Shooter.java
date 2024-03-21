@@ -30,6 +30,11 @@ public class Shooter extends SubsystemBase {
     }
   }
 
+  public void setShooterLowPower(double power) {
+    this.topMotor.set(-power);
+    this.bottomMotor.set(power);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

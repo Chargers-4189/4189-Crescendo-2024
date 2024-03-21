@@ -14,7 +14,7 @@ import frc.utils.Alarm;
 public class AmpOnboard extends Command {
   /** Creates a new AmpOnboard. */
   private boolean isFinished;
-  private Alarm timer = new Alarm(3);
+  private Alarm timer = new Alarm(2.25);
   private Alarm timeout = new Alarm(Constants.AmpSystemConstants.kNoteTransferTimeoutLimit);
 
   private Onboarder onboarder;
@@ -42,15 +42,15 @@ public class AmpOnboard extends Command {
   @Override
   public void execute() {
 
-    if (ampSystem.getAmpSensor() && timer.hasTriggered()) {
+    if (timer.hasTriggered()) {
       onboarder.setOnboarder(0);
       shooter.setShooter(Constants.ShooterConstants.kShooterLOWPowerValue);
       ampSystem.setRoller(0);
       isFinished = true;
     } else {
-      onboarder.setOnboarder(1);
-      shooter.setShooter(Constants.ShooterConstants.kShooterLOWPowerValue);
-      ampSystem.setRoller(1);
+      onboarder.setOnboarder(0.5);
+      shooter.setShooterLowPower(Constants.ShooterConstants.kShooterLOWPowerValue);
+      ampSystem.setRoller(-1);
     }
 
     if (timeout.hasTriggered()) {
