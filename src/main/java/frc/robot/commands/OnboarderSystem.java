@@ -52,7 +52,23 @@ public class OnboarderSystem extends Command {
         onboarder.setOnboarder(0);
       }
     }
-    */
+    *//*
+    if(onboarder.getShooterSensor()){
+      onboarder.setOnboarder(0);
+    } else if(onboarder.getBumperSensor()) {
+      onboarder.setOnboarder(0.75);
+    }else {
+      onboarder.setOnboarder(0);
+    }*/
+    if (Math.abs(operatorController.getLeftY()) > .1) {
+        onboarder.setOnboarder(-operatorController.getLeftY());
+      } /*else if(onboarder.getShooterSensor()){
+        onboarder.setOnboarder(0);
+      } else if(onboarder.getBumperSensor()) {
+        onboarder.setOnboarder(0.75);
+      } */else {
+        onboarder.setOnboarder(0);
+      }
   }
 
   // Called once the command ends or is interrupted.

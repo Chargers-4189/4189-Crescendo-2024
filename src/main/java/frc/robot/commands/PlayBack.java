@@ -8,9 +8,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Onboarder;
 import frc.robot.subsystems.Shooter;
@@ -36,12 +38,11 @@ public class PlayBack extends Command {
     this.swerveController = swerveController;
     this.onboarder = onboarder;
     this.shooter = shooter;
-    
 
     this.recSelector = RecSelector;
     this.onRed = alliancebox;
     // Use addRequirements() here to declare subsystem dependencies.
-  //addRequirements(swerveController, onboarder, shooter);
+    addRequirements(swerveController, onboarder, shooter);
   }
 
   // Called when the command is initially scheduled.
@@ -62,7 +63,7 @@ public class PlayBack extends Command {
   @Override
   public void execute() {
     String cLine = sc.nextLine();
-    String[] currentArray = cLine.split(",", 9);
+    String[] currentArray = cLine.split(",", 6);
     controlLeftY = Double.valueOf(currentArray[0]);
     controlLeftX = Double.valueOf(currentArray[1]);
     controlRightX = Double.valueOf(currentArray[2]);
@@ -76,12 +77,12 @@ public class PlayBack extends Command {
     }
 
     this.swerveController.drive(
-      controlLeftY,
-      controlLeftX,
-      controlRightX,
+      MathUtil.applyDeadband(controlLeftY, OIConstants.kDriveDeadband),
+      MathUtil.applyDeadband(controlLeftX, OIConstants.kDriveDeadband),
+      MathUtil.applyDeadband(controlRightX, OIConstants.kDriveDeadband),
       true, true
     );
-    onboarder.setOnboarder(onboarderSpeed);
+    onboarder.setOnboarder(-onboarderSpeed);
     shooter.setShooter(shooterSpeed);
   }
 

@@ -8,12 +8,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.RecordPlaybackConstants;
 import frc.robot.subsystems.AmpSystem;
 import frc.robot.subsystems.Onboarder;
@@ -66,20 +64,13 @@ public class RecordCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(onboarder.getShooterSensor()){
-      onboarder.setOnboarder(0);
-    } else if(onboarder.getBumperSensor()) {
-      onboarder.setOnboarder(0.75);
-    }else {
-      onboarder.setOnboarder(0);
-    }
 
-    controlLeftY = -MathUtil.applyDeadband(leftShaft.getY(), OIConstants.kDriveDeadband);
-    controlLeftX = -MathUtil.applyDeadband(leftShaft.getX(), OIConstants.kDriveDeadband);
-    controlRightX = MathUtil.applyDeadband(rightShaft.getX(), OIConstants.kDriveDeadband);
+    controlLeftY = leftShaft.getY();
+    controlLeftX = leftShaft.getX();
+    controlRightX = rightShaft.getX();
 
-    onboarderSpeed = -onboarder.getOnboarderSpeed();
-    shooterSpeed = -shooter.getShooterSpeed();
+    onboarderSpeed = onboarder.getOnboarderSpeed();
+    shooterSpeed = shooter.getShooterSpeed();
 
     try {
       rFile.append(

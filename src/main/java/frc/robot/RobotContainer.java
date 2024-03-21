@@ -8,12 +8,12 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.RecordPlaybackConstants;
 import frc.robot.Constants.ShuffleboardConstants;
 import frc.robot.commands.Auto_Shoot;
+import frc.robot.commands.Auto_ShootParallel;
 import frc.robot.commands.Auton_Playback;
 import frc.robot.commands.AutoToggleActuate;
 import frc.robot.commands.Auto_OnboardAmp;
 import frc.robot.commands.Auto_PlaceAmp;
 import frc.robot.commands.CancelAll;
-import frc.robot.commands.DriveAmpSystem;
 import frc.robot.commands.DriveClimbDown;
 import frc.robot.commands.DriveClimbUp;
 import frc.robot.commands.DriveShooter;
@@ -67,14 +67,14 @@ public class RobotContainer {
   private DriveClimbDown driveClimbDown = new DriveClimbDown(climb);
   private AutoToggleActuate autoToggleActuate = new AutoToggleActuate(ampSystem);
 
-  //private OnboarderSystem onboarderSystem = new OnboarderSystem(onboarder, m_operatorController);
+  private OnboarderSystem onboarderSystem = new OnboarderSystem(onboarder, m_operatorController, false, false);
   //private DriveActuate driveAcuate = new DriveActuate(m_operatorController, ampSystem);
 
   // Autonomous Commands
-  private Auto_Shoot autoShootNote = new Auto_Shoot(ampSystem, shooter, onboarder);
+  //private Auto_Shoot autoShootNote = new Auto_Shoot(ampSystem, shooter, onboarder);
   private Auto_PlaceAmp autoPlaceAmp = new Auto_PlaceAmp(ampSystem);
   private Auto_OnboardAmp autoOnboardAmp = new Auto_OnboardAmp(ampSystem, onboarder, shooter);
-  //private Auto_ShootP autoShootP = new Auto_ShootP(ampSystem, shooter, onboarder);
+  private Auto_ShootParallel autoShootP = new Auto_ShootParallel(ampSystem, shooter, onboarder);
 
   // Shuffleboard Autonomous Tab
   private final ShuffleboardTab autoTab = Shuffleboard.getTab(ShuffleboardConstants.kAutonomousTab);
@@ -122,8 +122,8 @@ public class RobotContainer {
     m_operatorController.back().onTrue(cancelAll);
     m_operatorController.start().onTrue(cancelAll);
 
-    m_operatorController.leftBumper().onTrue(autoShootNote);
-    m_operatorController.rightBumper().onTrue(autoShootNote);
+    m_operatorController.leftBumper().onTrue(autoShootP).onFalse(onboarderSystem);
+    //m_operatorController.rightBumper().onTrue(autoShootP).False(onboarderSystem);
     m_operatorController.x().onTrue(autoToggleActuate);
     m_operatorController.b().onTrue(autoPlaceAmp);
     m_operatorController.a().onTrue(autoOnboardAmp);

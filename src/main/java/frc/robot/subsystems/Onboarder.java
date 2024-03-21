@@ -68,5 +68,6 @@ public class Onboarder extends SubsystemBase {
     booleanbox.setBoolean(!this.bumperSensor.get());
     setDriverLight();
     timer++;
+    System.out.println(this.getOnboarderSpeed());
   }
 }
