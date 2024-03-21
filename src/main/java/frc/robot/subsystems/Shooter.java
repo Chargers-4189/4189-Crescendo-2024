@@ -12,12 +12,14 @@ import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
   /** Creates a new Shooter. */
+  private double shooterSpeed = 0;
   private TalonFX topMotor = new TalonFX(Constants.ShooterConstants.kTopShooterCANID);
   private TalonFX bottomMotor = new TalonFX(Constants.ShooterConstants.kBottomShooterCANID);
 
   public Shooter() {}
 
   public void setShooter(double power) {
+    this.shooterSpeed = power;
     power = power * 8.5;
     double powerTop = power + 2;
     double powerBottom = power -2;
@@ -28,6 +30,9 @@ public class Shooter extends SubsystemBase {
       this.topMotor.setControl(new VoltageOut(0));
       this.bottomMotor.setControl(new VoltageOut(0));
     }
+  }
+  public double getShooterSpeed() {
+    return this.shooterSpeed;
   }
 
   public void setShooterLowPower(double power) {

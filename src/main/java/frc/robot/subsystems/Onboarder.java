@@ -26,6 +26,7 @@ public class Onboarder extends SubsystemBase {
   private double maxBrightness = 1;
   private int timer = 0;
 
+  private double onboarderPower = 0;
 
   private ShuffleboardTab tab = Shuffleboard.getTab(Constants.ShuffleboardConstants.kAutonomousTab);
   private final GenericEntry booleanbox = tab.add("Intake", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
@@ -40,8 +41,13 @@ public class Onboarder extends SubsystemBase {
   }
 
   public void setOnboarder(double power) {
-    onboardMotor.set(ControlMode.PercentOutput, -power);
+    this.onboarderPower = -power;
+    onboardMotor.set(ControlMode.PercentOutput, this.onboarderPower);
   }
+  public double getOnboarderSpeed() {
+    return this.onboarderPower;
+  }
+  
   public void setDriverLight() {
     if(getShooterSensor()){
       OnboarderLight.set(TalonSRXControlMode.PercentOutput, maxBrightness);

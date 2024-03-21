@@ -18,9 +18,9 @@ public class Auto_ShootP extends ParallelCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     try {
-      addCommands(new ActuateToAmp(ampSystem), new PrimeShootNote(shooter, onboarder));
+      //addCommands(new ActuateToAmp(ampSystem), new PrimeShootNote(shooter, onboarder));
     } catch (Exception e) {
-      addCommands(new CancelAmpBoard(onboarder, shooter, ampSystem));
+      //addCommands(new CancelAmpBoard(onboarder, shooter, ampSystem));
       System.err.println("Failed to AutoShoot");
       e.printStackTrace();
     }

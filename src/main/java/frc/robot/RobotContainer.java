@@ -8,7 +8,6 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.RecordPlaybackConstants;
 import frc.robot.Constants.ShuffleboardConstants;
 import frc.robot.commands.Auto_Shoot;
-import frc.robot.commands.Auto_ShootP;
 import frc.robot.commands.Auton_Playback;
 import frc.robot.commands.AutoToggleActuate;
 import frc.robot.commands.Auto_OnboardAmp;
@@ -20,6 +19,7 @@ import frc.robot.commands.DriveClimbUp;
 import frc.robot.commands.DriveShooter;
 import frc.robot.commands.OnboarderSystem;
 import frc.robot.commands.PlayBack;
+import frc.robot.commands.RecordCommand;
 import frc.robot.commands.SwerveJoysticks;
 import frc.robot.subsystems.AmpSystem;
 import frc.robot.subsystems.Climb;
@@ -80,9 +80,9 @@ public class RobotContainer {
   private final ShuffleboardTab autoTab = Shuffleboard.getTab(ShuffleboardConstants.kAutonomousTab);
   private final GenericEntry alliancebox = autoTab.add("Red Alliance", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
   private final SendableChooser<File> fileChooser = new SendableChooser<>();
-  // Playback
-  //private PlayBack playBackAuto;
-  //private Auton_Playback AUTO_Playback;
+  // Record & Playback
+  private RecordCommand recordCommand;
+  private PlayBack playbackCommand;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -139,8 +139,14 @@ public class RobotContainer {
     //playBackAuto = new PlayBack(m_robotDrive, onboarder, shooter, fileChooser, alliancebox);
     new JoystickButton(leftStick, 6).onTrue(cancelAll);
     new JoystickButton(leftStick, 7).onTrue(cancelAll);
-    // Disabled to prevent accidentally playback. If testing, use autonomous period of FRC Drive Station.
-    //new JoystickButton(rightStick, 7).onTrue(playBackAuto);
+    // If testing, use autonomous period of FRC Drive Station.
+    recordCommand = new RecordCommand(onboarder, shooter, ampSystem, leftStick, rightStick, fileChooser, alliancebox);
+    playbackCommand = new PlayBack(m_robotDrive, onboarder, shooter, fileChooser, alliancebox);
+
+    JoystickButton recButton = new JoystickButton(rightStick, 10);
+    JoystickButton stopRecButton = new JoystickButton(rightStick, 11);
+    recButton.onTrue(recordCommand.until(stopRecButton));
+    new JoystickButton(rightStick, 7).onTrue(playbackCommand);
 
     new JoystickButton(leftStick, 1).whileTrue(new OnboarderSystem(onboarder, m_operatorController, true, true));
     new JoystickButton(rightStick, 1).whileTrue(new OnboarderSystem(onboarder, m_operatorController, true, false));

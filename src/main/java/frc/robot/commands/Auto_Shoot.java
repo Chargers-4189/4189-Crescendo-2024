@@ -19,9 +19,9 @@ public class Auto_Shoot extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     try {
-      addCommands(new ActuateToAmp(ampSystem), new PrimeShooter(shooter, onboarder), new ShootNote(shooter, onboarder), new ActuateToRest(ampSystem));
+      //addCommands(new ActuateToAmp(ampSystem), new PrimeShooter(shooter, onboarder), new ShootNote(shooter, onboarder), new ActuateToRest(ampSystem));
     } catch (Exception e) {
-      addCommands(new CancelAmpBoard(onboarder, shooter, ampSystem));
+      //addCommands(new CancelAmpBoard(onboarder, shooter, ampSystem));
       System.err.println("Failed to AutoShoot");
       e.printStackTrace();
     }
