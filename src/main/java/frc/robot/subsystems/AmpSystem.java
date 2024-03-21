@@ -73,7 +73,7 @@ public class AmpSystem extends SubsystemBase {
   }
 
   public void disableMotor() {
-    this.disableMotor = true;
+    //this.disableMotor = true;
     actuator.set(ControlMode.PercentOutput, 0);
   }
   public void enableMotor() {

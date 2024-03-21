@@ -12,7 +12,7 @@ import frc.utils.Alarm;
 
 public class PrimeShooter extends Command {
   private boolean isFinished;
-  private Alarm timer = new Alarm(2);
+  private Alarm timer = new Alarm(1.5);
 
   private Shooter shooter;
   private Onboarder onboarder;

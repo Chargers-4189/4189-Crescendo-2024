@@ -42,7 +42,8 @@ public class ActuateToRest extends Command {
     if (timeout.hasTriggered()) {
       ampSystem.setActuate(0);
       ampSystem.disableMotor();
-      throw new Error("ActuateToRest has exceeded timeout limit");
+      System.err.println("ActuateToRest has exceeded timeout limit");
+      isFinished = true;
     }
   }
 
