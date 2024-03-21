@@ -42,7 +42,8 @@ public class ActuateToAmp extends Command {
     if (timeout.hasTriggered()) {
       ampSystem.setActuate(0);
       ampSystem.disableMotor();
-      throw new Error("ActuateToAmp has exceeded timeout limit");
+      System.err.println("ActuateToAmp has exceeded timeout limit");
+      isFinished = true;
     }
   }
 
