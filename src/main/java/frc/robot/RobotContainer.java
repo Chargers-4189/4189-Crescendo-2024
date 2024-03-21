@@ -9,7 +9,7 @@ import frc.robot.Constants.RecordPlaybackConstants;
 import frc.robot.Constants.ShuffleboardConstants;
 import frc.robot.commands.Auto_Shoot;
 import frc.robot.commands.Auto_ShootP;
-//import frc.robot.commands.AUTO_Playback;
+import frc.robot.commands.Auton_Playback;
 import frc.robot.commands.AutoToggleActuate;
 import frc.robot.commands.Auto_OnboardAmp;
 import frc.robot.commands.Auto_PlaceAmp;
@@ -74,7 +74,7 @@ public class RobotContainer {
   private Auto_Shoot autoShootNote = new Auto_Shoot(ampSystem, shooter, onboarder);
   private Auto_PlaceAmp autoPlaceAmp = new Auto_PlaceAmp(ampSystem);
   private Auto_OnboardAmp autoOnboardAmp = new Auto_OnboardAmp(ampSystem, onboarder, shooter);
-  private Auto_ShootP autoShootP = new Auto_ShootP(ampSystem, shooter, onboarder);
+  //private Auto_ShootP autoShootP = new Auto_ShootP(ampSystem, shooter, onboarder);
 
   // Shuffleboard Autonomous Tab
   private final ShuffleboardTab autoTab = Shuffleboard.getTab(ShuffleboardConstants.kAutonomousTab);
@@ -82,7 +82,7 @@ public class RobotContainer {
   private final SendableChooser<File> fileChooser = new SendableChooser<>();
   // Playback
   //private PlayBack playBackAuto;
-  //private AUTO_Playback AUTO_Playback;
+  //private Auton_Playback AUTO_Playback;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -174,7 +174,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // Run currently selected playback file
-    //return new Auton_Playback(ampSystem, m_robotDrive, onboarder, shooter, fileChooser, alliancebox);
-    return new PlayBack(m_robotDrive, onboarder, shooter, fileChooser, alliancebox);
+    return new Auton_Playback(ampSystem, m_robotDrive, onboarder, shooter, fileChooser, alliancebox);
+    //return new PlayBack(m_robotDrive, onboarder, shooter, fileChooser, alliancebox);
   }
 }
