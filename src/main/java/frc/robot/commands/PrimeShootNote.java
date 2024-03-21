@@ -16,6 +16,6 @@ public class PrimeShootNote extends SequentialCommandGroup {
   public PrimeShootNote(Shooter shooter, Onboarder onboarder) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    //addCommands(new PrimeShooter(shooter, onboarder), new ShootNote(shooter, onboarder));
+    addCommands(new PrimeShooter(shooter, onboarder), new ShootNote(shooter, onboarder));
   }
 }

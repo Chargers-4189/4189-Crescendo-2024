@@ -80,6 +80,8 @@ public class RobotContainer {
   private final ShuffleboardTab autoTab = Shuffleboard.getTab(ShuffleboardConstants.kAutonomousTab);
   private final GenericEntry alliancebox = autoTab.add("Red Alliance", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
   private final SendableChooser<File> fileChooser = new SendableChooser<>();
+  private final GenericEntry fileName = autoTab.add("File Name", "PLACEHOLDER")
+   .withWidget(BuiltInWidgets.kTextView).getEntry();
   // Record & Playback
   private RecordCommand recordCommand;
   private PlayBack playbackCommand;
@@ -100,8 +102,8 @@ public class RobotContainer {
     configureBindings();
 
     // Configure default commands
-    onboarder.setDefaultCommand(new OnboarderSystem(onboarder, m_operatorController, false, false));
-    ampSystem.setDefaultCommand(new DriveAmpSystem(m_operatorController, ampSystem));
+    //onboarder.setDefaultCommand(new OnboarderSystem(onboarder, m_operatorController, false, false));
+    //ampSystem.setDefaultCommand(new DriveAmpSystem(m_operatorController, ampSystem));
     m_robotDrive.setDefaultCommand(new SwerveJoysticks(m_robotDrive, leftStick, rightStick));
   }
 
@@ -140,7 +142,7 @@ public class RobotContainer {
     new JoystickButton(leftStick, 6).onTrue(cancelAll);
     new JoystickButton(leftStick, 7).onTrue(cancelAll);
     // If testing, use autonomous period of FRC Drive Station.
-    recordCommand = new RecordCommand(onboarder, shooter, ampSystem, leftStick, rightStick, fileChooser, alliancebox);
+    recordCommand = new RecordCommand(onboarder, shooter, ampSystem, leftStick, rightStick, fileChooser, fileName);
     playbackCommand = new PlayBack(m_robotDrive, onboarder, shooter, fileChooser, alliancebox);
 
     JoystickButton recButton = new JoystickButton(rightStick, 10);

@@ -13,7 +13,7 @@ public class DriveClimbUp extends Command {
   public DriveClimbUp(Climb climb) {
     this.climb = climb;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(climb);
+  //addRequirements(climb);
   }
 
   // Called when the command is initially scheduled.

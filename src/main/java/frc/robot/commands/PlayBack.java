@@ -41,7 +41,7 @@ public class PlayBack extends Command {
     this.recSelector = RecSelector;
     this.onRed = alliancebox;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(swerveController, onboarder, shooter);
+  //addRequirements(swerveController, onboarder, shooter);
   }
 
   // Called when the command is initially scheduled.

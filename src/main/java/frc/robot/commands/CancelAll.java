@@ -29,7 +29,7 @@ public class CancelAll extends Command {
     this.ampSystem = ampSystem;
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(swerve, onboarder, shooter, climb, ampSystem);
+  //addRequirements(swerve, onboarder, shooter, climb, ampSystem);
   }
 
   // Called when the command is initially scheduled.

@@ -16,9 +16,9 @@ public class Auto_PlaceAmp extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     try {
-      //addCommands(new ActuateToAmp(ampSystem), new AmpOuttake(ampSystem), new ActuateToRest(ampSystem));
+      addCommands(new ActuateToAmp(ampSystem), new AmpOuttake(ampSystem), new ActuateToRest(ampSystem));
     } catch (Exception e) {
-      //addCommands(new CancelAmp(ampSystem));
+      addCommands(new CancelAmp(ampSystem));
       System.err.println("Failed to AutoOnboard");
       e.printStackTrace();
     }

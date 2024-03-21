@@ -21,7 +21,7 @@ public class AutoToggleActuate extends Command {
     System.err.println("Hello WOrld");
     this.ampSystem = ampSystem;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(ampSystem);
+  //addRequirements(ampSystem);
   }
 
   // Called when the command is initially scheduled.

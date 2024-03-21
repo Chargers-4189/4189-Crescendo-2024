@@ -18,7 +18,7 @@ public class DriveOnboarder extends Command {
     this.operatorController = operatorController;
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(onboarder);
+  //addRequirements(onboarder);
   }
 
   // Called when the command is initially scheduled.

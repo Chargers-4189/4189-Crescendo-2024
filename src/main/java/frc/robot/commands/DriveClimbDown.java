@@ -15,7 +15,7 @@ public class DriveClimbDown extends Command {
     this.climb = climb;
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(climb);
+  //addRequirements(climb);
   }
 
   // Called when the command is initially scheduled.

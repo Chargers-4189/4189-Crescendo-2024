@@ -23,7 +23,7 @@ public class ShootNote extends Command {
     this.onboarder = onboarder;
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(shooter, onboarder);
+  //addRequirements(shooter, onboarder);
   }
 
   // Called when the command is initially scheduled.

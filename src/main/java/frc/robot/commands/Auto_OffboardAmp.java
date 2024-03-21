@@ -14,6 +14,6 @@ public class Auto_OffboardAmp extends SequentialCommandGroup {
   public Auto_OffboardAmp() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    //addCommands();
+    addCommands();
   }
 }

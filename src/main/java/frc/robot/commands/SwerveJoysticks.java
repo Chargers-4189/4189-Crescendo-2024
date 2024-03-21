@@ -42,7 +42,7 @@ public class SwerveJoysticks extends PIDCommand {
           }
         });
         //absolute angle is tan inverse
-        addRequirements(swerve);
+      addRequirements(swerve);
     SmartDashboard.putNumber("P", 0);
     SmartDashboard.putNumber("I",0);
     SmartDashboard.putNumber("D",0);

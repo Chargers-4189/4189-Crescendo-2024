@@ -27,7 +27,7 @@ public class AmpOnboard extends Command {
     this.ampSystem = ampSystem;
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(onboarder, shooter, ampSystem);
+  //addRequirements(onboarder, shooter, ampSystem);
   }
 
   // Called when the command is initially scheduled.

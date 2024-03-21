@@ -17,7 +17,7 @@ public class CancelAmp extends Command {
     this.ampSystem = ampSystem;
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(ampSystem);
+  //addRequirements(ampSystem);
   }
 
   // Called when the command is initially scheduled.

@@ -17,7 +17,7 @@ public class DriveAmpSystem extends Command {
     this.operatorController = operatorController;
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(ampSystem);
+  //addRequirements(ampSystem);
   }
 
   // Called when the command is initially scheduled.

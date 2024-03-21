@@ -44,6 +44,9 @@ public class RecordCommand extends Command {
     
     this.onboarder = onboarder;
     this.shooter = shooter;
+
+    this.RecSelector = RecSelector;
+    this.recFileName = FileName;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -63,6 +66,14 @@ public class RecordCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if(onboarder.getShooterSensor()){
+      onboarder.setOnboarder(0);
+    } else if(onboarder.getBumperSensor()) {
+      onboarder.setOnboarder(0.75);
+    }else {
+      onboarder.setOnboarder(0);
+    }
+
     controlLeftY = -MathUtil.applyDeadband(leftShaft.getY(), OIConstants.kDriveDeadband);
     controlLeftX = -MathUtil.applyDeadband(leftShaft.getX(), OIConstants.kDriveDeadband);
     controlRightX = MathUtil.applyDeadband(rightShaft.getX(), OIConstants.kDriveDeadband);

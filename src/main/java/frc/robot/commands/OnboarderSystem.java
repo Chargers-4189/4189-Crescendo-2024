@@ -22,7 +22,7 @@ public class OnboarderSystem extends Command {
     this.intake = intake;
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(onboarder);
+  //addRequirements(onboarder);
   }
 
   // Called when the command is initially scheduled.
@@ -32,6 +32,7 @@ public class OnboarderSystem extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    /*
     if (joystickControl) {
       // For joystick override
       if (intake) {
@@ -51,6 +52,7 @@ public class OnboarderSystem extends Command {
         onboarder.setOnboarder(0);
       }
     }
+    */
   }
 
   // Called once the command ends or is interrupted.
