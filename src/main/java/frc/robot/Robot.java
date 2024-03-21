@@ -81,7 +81,18 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    /*
+    Used for manual override of onboarder
+    CommandXboxController m_operatorController = new CommandXboxController(OIConstants.kDriverControllerPort);
+    Onboarder onboarder = new Onboarder();
+    if (m_operatorController.getRightY() > 0.1 || m_operatorController.getRightY() < 0.1) {
+      onboarder.setOnboarder(m_operatorController.getLeftY());
+    } else {
+      onboarder.setOnboarder(0);
+    }
+    */
+  }
 
   @Override
   public void testInit() {

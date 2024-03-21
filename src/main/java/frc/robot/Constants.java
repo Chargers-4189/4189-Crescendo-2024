@@ -168,7 +168,8 @@ public final class Constants {
   }
 
   public static final class OnboarderConstants {
-    public static final int konboardMotorcanID = 8;
+    public static final int konboardMotorCANID = 8;
+    public static final int kOnboarderLightCANID = 15;
     public static final int kIntakeBeamDIO = 0;
     public static final int kOutakeBeamDIO = 1;
   }
@@ -176,21 +177,30 @@ public final class Constants {
   public static final class ShooterConstants {
     public static final int kTopShooterCANID = 6;
     public static final int kBottomShooterCANID = 7;
+    public static final double kShooterPowerValue = 1;
+    public static final double kShooterLOWPowerValue = 0.05;
   }
 
   public static final class ClimbConstants {
-    public static final int kClimbMotorID = 15;
-    public static final int kRestLimitDIO = 3;
-    public static final int kExtendLimitDIO = 2;
+    public static final int kClimbMotorID = 12;
+    public static final int kRestLimitDIO = 5;
+    public static final int kExtendLimitDIO = 4;
   }
     
-  public static final class NoteAcuatorConstants {
-    public static final int kScissorLiftCanID = 11;
+  public static final class AmpSystemConstants {
     public static final int kAcuatorCanID = 13;
-    public static final int kRollerCanID = 12;
-    public static final int kEncoderADIO = 4;
-    public static final int kEncoderBDIO = 5;
-    public static final int kScissorLimitDIO = 9;
+    public static final int kRollerCanID = 14;
+    public static final int kEncoderPWM = 3;
+    public static final int kAmpSensorDIO = 2;
+
+    public static final double kEncoderRestPosition = 0.8209;
+    public static final double kEncoderAmpPosition = 0.44789;
+    public static final double kAcuateTimeoutLimit = 3;
+    public static final double kNoteTransferTimeoutLimit = 5;
+  }
+
+  public static final class ShuffleboardConstants {
+    public static final String kAutonomousTab = "Autonomous";
   }
     
   public static final class RecordPlaybackConstants {

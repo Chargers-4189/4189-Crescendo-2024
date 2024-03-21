@@ -5,9 +5,12 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -18,15 +21,16 @@ public class Onboarder extends SubsystemBase {
   /** Creates a new Onboarder. */
   private DigitalInput bumperSensor = new DigitalInput(Constants.OnboarderConstants.kIntakeBeamDIO);
   private DigitalInput shooterSensor = new DigitalInput(Constants.OnboarderConstants.kOutakeBeamDIO);
-  private WPI_VictorSPX onboardMotor = new WPI_VictorSPX(Constants.OnboarderConstants.konboardMotorcanID);
+  private WPI_VictorSPX onboardMotor = new WPI_VictorSPX(Constants.OnboarderConstants.konboardMotorCANID);
+  private TalonSRX OnboarderLight = new TalonSRX(Constants.OnboarderConstants.kOnboarderLightCANID);
+  private double maxBrightness = 1;
+  private int timer = 0;
 
-  private final ShuffleboardTab tab;
-  private final GenericEntry booleanbox;
+
+  private ShuffleboardTab tab = Shuffleboard.getTab(Constants.ShuffleboardConstants.kAutonomousTab);
+  private final GenericEntry booleanbox = tab.add("Intake", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
   
-  public Onboarder(ShuffleboardTab tab) {
-    this.tab = tab;
-    booleanbox = tab.add("Intake", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
-  }
+  public Onboarder() {}
 
   public boolean getBumperSensor(){
     return !this.bumperSensor.get();
@@ -38,13 +42,25 @@ public class Onboarder extends SubsystemBase {
   public void setOnboarder(double power) {
     onboardMotor.set(ControlMode.PercentOutput, -power);
   }
+  public void setDriverLight() {
+    if(getShooterSensor()){
+      OnboarderLight.set(TalonSRXControlMode.PercentOutput, maxBrightness);
+    }else if(getBumperSensor()){
+      if ((timer % 25) < 12.5) { // 1/2 seconds flash
+        OnboarderLight.set(TalonSRXControlMode.PercentOutput, maxBrightness);
+      } else {
+        OnboarderLight.set(TalonSRXControlMode.PercentOutput, 0);
+      }
+    }else{
+      OnboarderLight.set(TalonSRXControlMode.PercentOutput, 0);
+    }
+  }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     booleanbox.setBoolean(!this.bumperSensor.get());
-    
-    // System.out.println("outake"+outTake());
-    // System.out.println("intake"+intake());
+    setDriverLight();
+    timer++;
   }
 }

@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -17,6 +18,19 @@ public class Shooter extends SubsystemBase {
   public Shooter() {}
 
   public void setShooter(double power) {
+    power = power * 8.5;
+    double powerTop = power + 2;
+    double powerBottom = power -2;
+    if (power != 0) {
+      this.topMotor.setControl(new VoltageOut(-powerTop));
+      this.bottomMotor.setControl(new VoltageOut(powerBottom));
+    } else {
+      this.topMotor.setControl(new VoltageOut(0));
+      this.bottomMotor.setControl(new VoltageOut(0));
+    }
+  }
+
+  public void setShooterLowPower(double power) {
     this.topMotor.set(-power);
     this.bottomMotor.set(power);
   }

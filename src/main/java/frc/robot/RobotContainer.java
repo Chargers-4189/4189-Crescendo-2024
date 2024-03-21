@@ -4,27 +4,41 @@
 
 package frc.robot;
 
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.RecordPlaybackConstants;
+import frc.robot.Constants.ShuffleboardConstants;
+import frc.robot.commands.Auto_Shoot;
+import frc.robot.commands.Auto_ShootP;
+import frc.robot.commands.Auton_Playback;
+import frc.robot.commands.AutoToggleActuate;
+import frc.robot.commands.Auto_OnboardAmp;
+import frc.robot.commands.Auto_PlaceAmp;
+import frc.robot.commands.CancelAll;
+import frc.robot.commands.DriveAmpSystem;
+import frc.robot.commands.DriveClimbDown;
+import frc.robot.commands.DriveClimbUp;
+import frc.robot.commands.DriveShooter;
+import frc.robot.commands.OnboarderSystem;
+import frc.robot.commands.PlayBack;
+import frc.robot.commands.SwerveJoysticks;
+import frc.robot.subsystems.AmpSystem;
+import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Onboarder;
+import frc.robot.subsystems.Shooter;
 
-import java.util.List;
+import java.io.File;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -34,28 +48,61 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+  // The driver's controller
+  private CommandXboxController m_operatorController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  private Joystick leftStick = new Joystick(OperatorConstants.kDriverJoystickLeft);
+  private Joystick rightStick = new Joystick(OperatorConstants.kDriverJoystickRight);
+
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  private final Climb climb = new Climb();
+  private final AmpSystem ampSystem = new AmpSystem();
+  private final Onboarder onboarder = new Onboarder();
+  private final Shooter shooter = new Shooter();
 
-  // The driver's controller
-  XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+  // The robot's commands
+  private CancelAll cancelAll;
+  private DriveShooter driveShooter = new DriveShooter(shooter);
+  private DriveClimbUp driveClimbUp = new DriveClimbUp(climb);
+  private DriveClimbDown driveClimbDown = new DriveClimbDown(climb);
+  private AutoToggleActuate autoToggleActuate = new AutoToggleActuate(ampSystem);
+
+  //private OnboarderSystem onboarderSystem = new OnboarderSystem(onboarder, m_operatorController);
+  //private DriveActuate driveAcuate = new DriveActuate(m_operatorController, ampSystem);
+
+  // Autonomous Commands
+  private Auto_Shoot autoShootNote = new Auto_Shoot(ampSystem, shooter, onboarder);
+  private Auto_PlaceAmp autoPlaceAmp = new Auto_PlaceAmp(ampSystem);
+  private Auto_OnboardAmp autoOnboardAmp = new Auto_OnboardAmp(ampSystem, onboarder, shooter);
+  //private Auto_ShootP autoShootP = new Auto_ShootP(ampSystem, shooter, onboarder);
+
+  // Shuffleboard Autonomous Tab
+  private final ShuffleboardTab autoTab = Shuffleboard.getTab(ShuffleboardConstants.kAutonomousTab);
+  private final GenericEntry alliancebox = autoTab.add("Red Alliance", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
+  private final SendableChooser<File> fileChooser = new SendableChooser<>();
+  // Playback
+  //private PlayBack playBackAuto;
+  //private Auton_Playback AUTO_Playback;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    // Shuffleboard file access for playback files
+    File[] files = RecordPlaybackConstants.kRecordDirectory.listFiles();
+    for (int i = 0; i < files.length; i++) {
+      fileChooser.addOption(files[i].getName(), files[i]);
+    }
+    autoTab.add("Autonomous Mode", fileChooser)
+    .withWidget(BuiltInWidgets.kComboBoxChooser)
+    .withPosition(0, 0)
+    .withSize(2, 1);
+
     // Configure the trigger bindings
     configureBindings();
 
     // Configure default commands
-    m_robotDrive.setDefaultCommand(
-        // The left stick controls translation of the robot.
-        // Turning is controlled by the X axis of the right stick.
-        new RunCommand(
-            () -> m_robotDrive.drive(
-                -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
-                true, true),
-            m_robotDrive));
+    onboarder.setDefaultCommand(new OnboarderSystem(onboarder, m_operatorController, false, false));
+    ampSystem.setDefaultCommand(new DriveAmpSystem(m_operatorController, ampSystem));
+    m_robotDrive.setDefaultCommand(new SwerveJoysticks(m_robotDrive, leftStick, rightStick));
   }
 
   /**
@@ -68,10 +115,56 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+    // OPERATOR BUTTONS
+    cancelAll = new CancelAll(m_robotDrive, onboarder, shooter, climb, ampSystem);
+    m_operatorController.back().onTrue(cancelAll);
+    m_operatorController.start().onTrue(cancelAll);
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
+    m_operatorController.leftBumper().onTrue(autoShootNote);
+    m_operatorController.rightBumper().onTrue(autoShootNote);
+    m_operatorController.x().onTrue(autoToggleActuate);
+    m_operatorController.b().onTrue(autoPlaceAmp);
+    m_operatorController.a().onTrue(autoOnboardAmp);
+
+    // Manual Control
+    // WARNING: Manual Onboarder override is located in OnboarderSystem.java (Default Command)
+    m_operatorController.povUp().whileTrue(driveClimbUp);
+    m_operatorController.povUpLeft().whileTrue(driveClimbUp);
+    m_operatorController.povUpRight().whileTrue(driveClimbUp);
+    m_operatorController.povDown().whileTrue(driveClimbDown);
+    m_operatorController.povDownLeft().whileTrue(driveClimbDown);
+    m_operatorController.povDownRight().whileTrue(driveClimbDown);
+
+    // DRIVER BUTTONS
+    //playBackAuto = new PlayBack(m_robotDrive, onboarder, shooter, fileChooser, alliancebox);
+    new JoystickButton(leftStick, 6).onTrue(cancelAll);
+    new JoystickButton(leftStick, 7).onTrue(cancelAll);
+    // Disabled to prevent accidentally playback. If testing, use autonomous period of FRC Drive Station.
+    //new JoystickButton(rightStick, 7).onTrue(playBackAuto);
+
+    new JoystickButton(leftStick, 1).whileTrue(new OnboarderSystem(onboarder, m_operatorController, true, true));
+    new JoystickButton(rightStick, 1).whileTrue(new OnboarderSystem(onboarder, m_operatorController, true, false));
+    new JoystickButton(rightStick, 3).whileTrue(driveShooter);
+
+    // Lambdas that don't need a command
+    new JoystickButton(leftStick, 10).onTrue(new InstantCommand(() -> {
+      m_robotDrive.resetGyro();
+    }));
+    new JoystickButton(leftStick, 11).onTrue(new InstantCommand(() -> {
+          m_robotDrive.resetGyro();
+    }));
+    new JoystickButton(leftStick, 8).onTrue(new InstantCommand(() -> {
+          ampSystem.enableMotor();
+    }));
+    new JoystickButton(leftStick, 9).onTrue(new InstantCommand(() -> {
+          ampSystem.enableMotor();
+    }));
+    new JoystickButton(rightStick, 8).onTrue(new InstantCommand(() -> {
+          ampSystem.resetEncoder();
+    }));
+    new JoystickButton(rightStick, 9).onTrue(new InstantCommand(() -> {
+          ampSystem.resetEncoder();
+    }));
   }
 
   /**
@@ -80,44 +173,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    
-    TrajectoryConfig config = new TrajectoryConfig(
-        AutoConstants.kMaxSpeedMetersPerSecond,
-        AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-        // Add kinematics to ensure max speed is actually obeyed
-        .setKinematics(DriveConstants.kDriveKinematics);
-
-    // An example trajectory to follow. All units in meters.
-    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-        // Start at the origin facing the +X direction
-        new Pose2d(0, 0, new Rotation2d(0)),
-        // Pass through these two interior waypoints, making an 's' curve path
-        List.of(new Translation2d(0, 0), new Translation2d(0.05, 0)),
-        // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(0.1, 0, new Rotation2d(0)),
-        config);
-
-    var thetaController = new ProfiledPIDController(
-        AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
-    thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-    SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-        exampleTrajectory,
-        m_robotDrive::getPose, // Functional interface to feed supplier
-        DriveConstants.kDriveKinematics,
-
-        // Position controllers
-        new PIDController(AutoConstants.kPXController, 0, 0),
-        new PIDController(AutoConstants.kPYController, 0, 0),
-        thetaController,
-        m_robotDrive::setModuleStates,
-        m_robotDrive);
-
-    // Reset odometry to the starting pose of the trajectory.
-    m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
-
-    // Run path following command, then stop at the end.
-    return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false, false));
+    // Run currently selected playback file
+    return new Auton_Playback(ampSystem, m_robotDrive, onboarder, shooter, fileChooser, alliancebox);
+    //return new PlayBack(m_robotDrive, onboarder, shooter, fileChooser, alliancebox);
   }
 }
