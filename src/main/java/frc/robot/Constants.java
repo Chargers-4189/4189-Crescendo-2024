@@ -4,13 +4,13 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-
 import java.io.File;
 
 import com.revrobotics.CANSparkBase.IdleMode;
+
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -206,5 +206,11 @@ public final class Constants {
   public static final class RecordPlaybackConstants {
     public static final File kRecordDirectory = new File("/home/lvuser/Recordings");
     public static final String kFileType = "txt";
+  }
+  public static final class CameraConstants{
+    public static final String kShuffleboardTitle = "";
+    public static final int kPosX = 3;
+    public static final int kPosY = 3;
+    public static final int kUSBPort = 0;
   }
 }
