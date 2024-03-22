@@ -8,7 +8,7 @@ import java.io.File;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.AmpSystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Onboarder;
@@ -17,7 +17,7 @@ import frc.robot.subsystems.Shooter;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class Auton_Playback extends ParallelCommandGroup {
+public class Auton_Playback extends SequentialCommandGroup {
   /** Creates a new AUTO_Playback. */
   public Auton_Playback(AmpSystem ampSystem, DriveSubsystem swerve, Onboarder onboarder, Shooter shooter, SendableChooser<File> playbackFile, GenericEntry AllianceBox) {
     // Add your commands in the addCommands() call, e.g.
