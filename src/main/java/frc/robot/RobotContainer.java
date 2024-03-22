@@ -13,6 +13,7 @@ import frc.robot.commands.AutoToggleActuate;
 import frc.robot.commands.Auto_OnboardAmp;
 import frc.robot.commands.Auto_PlaceAmp;
 import frc.robot.commands.CancelAll;
+import frc.robot.commands.DisableActuator;
 import frc.robot.commands.DriveAmpSystem;
 import frc.robot.commands.DriveClimbDown;
 import frc.robot.commands.DriveClimbUp;
@@ -20,6 +21,7 @@ import frc.robot.commands.DriveShooter;
 import frc.robot.commands.OnboarderSystem;
 import frc.robot.commands.SwerveJoysticks;
 import frc.robot.subsystems.AmpSystem;
+import frc.robot.subsystems.USBWebcam;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Onboarder;
@@ -52,6 +54,7 @@ public class RobotContainer {
   private Joystick rightStick = new Joystick(OperatorConstants.kDriverJoystickRight);
 
   // The robot's subsystems
+  private final USBWebcam usbWebcam = new USBWebcam();
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final Climb climb = new Climb();
   private final AmpSystem ampSystem = new AmpSystem();
@@ -64,6 +67,7 @@ public class RobotContainer {
   private DriveClimbUp driveClimbUp = new DriveClimbUp(climb);
   private DriveClimbDown driveClimbDown = new DriveClimbDown(climb);
   private AutoToggleActuate autoToggleActuate = new AutoToggleActuate(ampSystem);
+  private DisableActuator disableActuator = new DisableActuator(ampSystem);
 
   //private OnboarderSystem onboarderSystem = new OnboarderSystem(onboarder, m_operatorController);
   //private DriveActuate driveAcuate = new DriveActuate(m_operatorController, ampSystem);
@@ -76,7 +80,7 @@ public class RobotContainer {
 
   // Shuffleboard Autonomous Tab
   private final ShuffleboardTab autoTab = Shuffleboard.getTab(ShuffleboardConstants.kAutonomousTab);
-  private final GenericEntry alliancebox = autoTab.add("Red Alliance", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
+  private final GenericEntry alliancebox = autoTab.add("Red Alliance", true).withWidget(BuiltInWidgets.kToggleButton).getEntry();
   private final SendableChooser<File> fileChooser = new SendableChooser<>();
   // Playback
   //private PlayBack playBackAuto;
@@ -123,6 +127,7 @@ public class RobotContainer {
     m_operatorController.x().onTrue(autoToggleActuate);
     m_operatorController.b().onTrue(autoPlaceAmp);
     m_operatorController.a().onTrue(autoOnboardAmp);
+    m_operatorController.y().onTrue(disableActuator);
 
     // Manual Control
     // WARNING: Manual Onboarder override is located in OnboarderSystem.java (Default Command)

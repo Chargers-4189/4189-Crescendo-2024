@@ -208,9 +208,12 @@ public final class Constants {
     public static final String kFileType = "txt";
   }
   public static final class CameraConstants{
-    public static final String kShuffleboardTitle = "";
+    public static final String kShuffleboardTitle = "Autonomous";
     public static final int kPosX = 3;
-    public static final int kPosY = 3;
+    public static final int kPosY = 0;
+    public static final int kWidth = 1920;
+    public static final int kHeight = 1080;
+    public static final int fps = 15;
     public static final int kUSBPort = 0;
   }
 }
