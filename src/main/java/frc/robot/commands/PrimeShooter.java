@@ -12,7 +12,8 @@ import frc.utils.Alarm;
 
 public class PrimeShooter extends Command {
   private boolean isFinished;
-  private Alarm timer = new Alarm(1.5);
+  private Alarm endBackwind = new Alarm(1.5);
+  private Alarm startShooter = new Alarm(1);
 
   private Shooter shooter;
   private Onboarder onboarder;
@@ -30,15 +31,20 @@ public class PrimeShooter extends Command {
   @Override
   public void initialize() {
     isFinished = false;
-    timer.initAlarm();
+    endBackwind.initAlarm();
+    startShooter.initAlarm();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.setShooter(Constants.ShooterConstants.kShooterPowerValue);
 
-    if (!onboarder.getShooterSensor() || timer.hasTriggered()) {
+    if (startShooter.hasTriggered()) {
+      shooter.setShooter(Constants.ShooterConstants.kShooterPowerValue);
+    }
+
+    if (/*!onboarder.getShooterSensor() || */endBackwind.hasTriggered()) {
+      shooter.setShooter(Constants.ShooterConstants.kShooterPowerValue);
       onboarder.setOnboarder(0);
       isFinished = true;
 
