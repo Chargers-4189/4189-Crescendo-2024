@@ -123,7 +123,7 @@ public class RobotContainer {
     m_operatorController.start().onTrue(cancelAll);
 
     m_operatorController.leftBumper().onTrue(autoShootNote);
-    m_operatorController.rightBumper().onTrue(autoShootNote);
+    //m_operatorController.rightBumper().onTrue(autoShootNote);
     m_operatorController.x().onTrue(autoToggleActuate);
     m_operatorController.b().onTrue(autoPlaceAmp);
     m_operatorController.a().onTrue(autoOnboardAmp);

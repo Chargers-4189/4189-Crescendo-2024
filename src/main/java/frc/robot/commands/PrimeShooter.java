@@ -12,7 +12,8 @@ import frc.utils.Alarm;
 
 public class PrimeShooter extends Command {
   private boolean isFinished;
-  private Alarm endBackwind = new Alarm(1.5);
+  private Alarm endBackwind = new Alarm(3);
+  private Alarm initAutoShoot = new Alarm(2);
   private Alarm startShooter = new Alarm(1);
 
   private Shooter shooter;
@@ -32,6 +33,7 @@ public class PrimeShooter extends Command {
   public void initialize() {
     isFinished = false;
     endBackwind.initAlarm();
+    initAutoShoot.initAlarm();
     startShooter.initAlarm();
   }
 
@@ -43,13 +45,13 @@ public class PrimeShooter extends Command {
       shooter.setShooter(Constants.ShooterConstants.kShooterPowerValue);
     }
 
-    if (/*!onboarder.getShooterSensor() || */endBackwind.hasTriggered()) {
+    if (endBackwind.hasTriggered() || (!onboarder.getShooterSensor() && initAutoShoot.hasTriggered())) {
       shooter.setShooter(Constants.ShooterConstants.kShooterPowerValue);
       onboarder.setOnboarder(0);
       isFinished = true;
 
     } else {
-      onboarder.setOnboarder(-0.5);
+      onboarder.setOnboarder(-0.35);
     }
   }
 
