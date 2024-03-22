@@ -29,7 +29,7 @@ public class SwerveJoysticks extends PIDCommand {
         output -> {
           double xSpeed = MathUtil.applyDeadband(leftStick.getY(), OIConstants.kDriveDeadband);
           double ySpeed = MathUtil.applyDeadband(leftStick.getX(), OIConstants.kDriveDeadband);
-          double rotationSpeed = MathUtil.applyDeadband(rightStick.getX(), OIConstants.kDriveDeadband);
+          double rotationSpeed = MathUtil.applyDeadband(-rightStick.getX(), OIConstants.kDriveDeadband);
           //if(!(-MathUtil.applyDeadband(rightShaft.getX() * -.5, OIConstants.kDriveDeadband) > 0)){        
           //  drive.setChosenAngle(output + Constants.DriveConstants.HeadingTurnRate);
          // }
