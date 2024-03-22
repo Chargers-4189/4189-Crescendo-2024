@@ -22,6 +22,6 @@ public class Auton_Playback extends ParallelCommandGroup {
   public Auton_Playback(AmpSystem ampSystem, DriveSubsystem swerve, Onboarder onboarder, Shooter shooter, SendableChooser<File> playbackFile, GenericEntry AllianceBox) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new ActuateToAmp(ampSystem), new PlayBack(swerve, onboarder, shooter, playbackFile, AllianceBox));
+    addCommands(new Auto_Shoot(ampSystem, shooter, onboarder), new PlayBack(swerve, onboarder, shooter, playbackFile, AllianceBox));
   }
 }

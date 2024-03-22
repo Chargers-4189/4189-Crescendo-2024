@@ -12,9 +12,9 @@ import frc.robot.subsystems.Shooter;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class Auto_ShootP extends ParallelCommandGroup {
+public class Auto_ShootParellel extends ParallelCommandGroup {
   /** Creates a new Auto_ShootP. */
-  public Auto_ShootP(AmpSystem ampSystem, Shooter shooter, Onboarder onboarder) {
+  public Auto_ShootParellel(AmpSystem ampSystem, Shooter shooter, Onboarder onboarder) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     try {
