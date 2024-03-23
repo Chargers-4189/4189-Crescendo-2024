@@ -10,6 +10,7 @@ import frc.robot.Constants.ShuffleboardConstants;
 import frc.robot.commands.Auto_Shoot;
 import frc.robot.commands.Auton_Playback;
 import frc.robot.commands.AutoToggleActuate;
+import frc.robot.commands.Auto_OffboardAmp;
 import frc.robot.commands.Auto_OnboardAmp;
 import frc.robot.commands.Auto_PlaceAmp;
 import frc.robot.commands.CancelAll;
@@ -22,7 +23,6 @@ import frc.robot.commands.DriveShooterBackwind;
 import frc.robot.commands.OnboarderSystem;
 import frc.robot.commands.SwerveJoysticks;
 import frc.robot.subsystems.AmpSystem;
-import frc.robot.subsystems.USBWebcam;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Onboarder;
@@ -78,6 +78,7 @@ public class RobotContainer {
   private Auto_Shoot autoShootNote = new Auto_Shoot(ampSystem, shooter, onboarder);
   private Auto_PlaceAmp autoPlaceAmp = new Auto_PlaceAmp(ampSystem);
   private Auto_OnboardAmp autoOnboardAmp = new Auto_OnboardAmp(ampSystem, onboarder, shooter);
+  private Auto_OffboardAmp autoOffboardAmp = new Auto_OffboardAmp(ampSystem, onboarder, shooter);
   //private Auto_ShootP autoShootP = new Auto_ShootP(ampSystem, shooter, onboarder);
 
   // Shuffleboard Autonomous Tab
@@ -122,14 +123,14 @@ public class RobotContainer {
     // OPERATOR BUTTONS
     cancelAll = new CancelAll(m_robotDrive, onboarder, shooter, climb, ampSystem);
     m_operatorController.back().onTrue(cancelAll);
-    m_operatorController.start().onTrue(cancelAll);
+    m_operatorController.start().onTrue(disableActuator);
 
     m_operatorController.leftBumper().onTrue(autoShootNote);
     //m_operatorController.rightBumper().onTrue(autoShootNote);
     m_operatorController.x().onTrue(autoToggleActuate);
     m_operatorController.b().onTrue(autoPlaceAmp);
     m_operatorController.a().onTrue(autoOnboardAmp);
-    m_operatorController.y().onTrue(disableActuator);
+    m_operatorController.y().onTrue(autoOffboardAmp);
 
     // Manual Control
     // WARNING: Manual Onboarder override is located in OnboarderSystem.java (Default Command)

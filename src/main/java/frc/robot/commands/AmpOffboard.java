@@ -5,28 +5,72 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
+import frc.robot.subsystems.AmpSystem;
+import frc.robot.subsystems.Onboarder;
+import frc.robot.subsystems.Shooter;
+import frc.utils.Alarm;
 
 public class AmpOffboard extends Command {
-  /** Creates a new AmpOffboard. */
-  public AmpOffboard() {
+  /** Creates a new AmpOnboard. */
+  private boolean isFinished;
+  private Alarm timer = new Alarm(2);
+  private Alarm timeout = new Alarm(Constants.AmpSystemConstants.kNoteTransferTimeoutLimit);
+
+  private Onboarder onboarder;
+  private Shooter shooter;
+  private AmpSystem ampSystem;
+
+  public AmpOffboard(Onboarder onboarder, Shooter shooter, AmpSystem ampSystem) {
+    this.onboarder = onboarder;
+    this.shooter = shooter;
+    this.ampSystem = ampSystem;
+
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(onboarder, shooter, ampSystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    isFinished = false;
+    timer.initAlarm();
+    timeout.initAlarm();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+
+    if (timer.hasTriggered()) {
+      onboarder.setOnboarder(0);
+      shooter.setShooter(0);
+      ampSystem.setRoller(0);
+      isFinished = true;
+    } else {
+      onboarder.setOnboarder(-0.5);
+      shooter.setShooterLowPower(-Constants.ShooterConstants.kShooterLOWPowerValue);
+      ampSystem.setRoller(0.5);
+    }
+
+    if (timeout.hasTriggered()) {
+      ampSystem.setActuate(0);
+      ampSystem.disableMotor();
+      throw new Error("AmpOffboard has exceeded timeout limit");
+    }
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    onboarder.setOnboarder(0);
+    shooter.setShooter(0);
+    ampSystem.setRoller(0);
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return isFinished;
   }
 }
