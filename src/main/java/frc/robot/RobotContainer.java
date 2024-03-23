@@ -18,6 +18,7 @@ import frc.robot.commands.DriveAmpSystem;
 import frc.robot.commands.DriveClimbDown;
 import frc.robot.commands.DriveClimbUp;
 import frc.robot.commands.DriveShooter;
+import frc.robot.commands.DriveShooterBackwind;
 import frc.robot.commands.OnboarderSystem;
 import frc.robot.commands.SwerveJoysticks;
 import frc.robot.subsystems.AmpSystem;
@@ -54,7 +55,7 @@ public class RobotContainer {
   private Joystick rightStick = new Joystick(OperatorConstants.kDriverJoystickRight);
 
   // The robot's subsystems
-  private final USBWebcam usbWebcam = new USBWebcam();
+  //private final USBWebcam usbWebcam = new USBWebcam();
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final Climb climb = new Climb();
   private final AmpSystem ampSystem = new AmpSystem();
@@ -64,6 +65,7 @@ public class RobotContainer {
   // The robot's commands
   private CancelAll cancelAll;
   private DriveShooter driveShooter = new DriveShooter(shooter);
+  private DriveShooterBackwind driveShooterBackwind = new DriveShooterBackwind(shooter);
   private DriveClimbUp driveClimbUp = new DriveClimbUp(climb);
   private DriveClimbDown driveClimbDown = new DriveClimbDown(climb);
   private AutoToggleActuate autoToggleActuate = new AutoToggleActuate(ampSystem);
@@ -147,6 +149,7 @@ public class RobotContainer {
 
     new JoystickButton(leftStick, 1).whileTrue(new OnboarderSystem(onboarder, m_operatorController, true, true));
     new JoystickButton(rightStick, 1).whileTrue(new OnboarderSystem(onboarder, m_operatorController, true, false));
+    new JoystickButton(leftStick, 3).whileTrue(driveShooterBackwind);
     new JoystickButton(rightStick, 3).whileTrue(driveShooter);
 
     // Lambdas that don't need a command
