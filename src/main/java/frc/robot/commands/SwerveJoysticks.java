@@ -9,6 +9,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
+import frc.robot.Constants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
@@ -20,7 +21,7 @@ public class SwerveJoysticks extends PIDCommand {
   public SwerveJoysticks(DriveSubsystem swerve, Joystick leftStick, Joystick rightStick) {
     super(
         // The controller that the command will use
-        new PIDController(0, 0, 0),
+        new PIDController(.02, 0,.000),
         // This should return the measurement
         () -> swerve.getAngle(),
         // This should return the setpoint (can also be a constant)
@@ -30,22 +31,28 @@ public class SwerveJoysticks extends PIDCommand {
           double xSpeed = MathUtil.applyDeadband(leftStick.getY(), OIConstants.kDriveDeadband);
           double ySpeed = MathUtil.applyDeadband(leftStick.getX(), OIConstants.kDriveDeadband);
           double rotationSpeed = MathUtil.applyDeadband(rightStick.getX(), OIConstants.kDriveDeadband);
-          //if(!(-MathUtil.applyDeadband(rightShaft.getX() * -.5, OIConstants.kDriveDeadband) > 0)){        
-          //  drive.setChosenAngle(output + Constants.DriveConstants.HeadingTurnRate);
-         // }
+          if(Math.abs(rotationSpeed)> 0.1){        
+            swerve.setChosenAngle(Math.atan2(-rightStick.getY(), rightStick.getX()) * 360 / (2*Math.PI));
+          } 
+          
+          //.println("GET Y: " + -rightStick.getY() + " GET X: " + rightStick.getX());
+          System.out.println(Math.atan2(-rightStick.getY(), rightStick.getX()) * 360 / (2*Math.PI));
+          
           // Use the output here
-          //drive.drive(xSpeed, ySpeed, output, true, true);
+          swerve.drive(xSpeed, ySpeed, -output, true, true);
+          SmartDashboard.putNumber("Angle", swerve.getAngle());
+          SmartDashboard.putNumber("Chossen Angle", swerve.getChosenAngle());
+          /*
           if(xSpeed == 0 && ySpeed==0 && rotationSpeed == 0){
             swerve.setX();
           } else {
             swerve.drive(xSpeed, ySpeed, rotationSpeed, true, true);
           }
+          */
         });
         //absolute angle is tan inverse
         addRequirements(swerve);
-    SmartDashboard.putNumber("P", 0);
-    SmartDashboard.putNumber("I",0);
-    SmartDashboard.putNumber("D",0);
+    
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
   }
@@ -53,6 +60,7 @@ public class SwerveJoysticks extends PIDCommand {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    
     return false;
   }
 }

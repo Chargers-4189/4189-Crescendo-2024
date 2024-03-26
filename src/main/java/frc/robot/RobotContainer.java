@@ -36,6 +36,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -92,6 +93,9 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Shuffleboard file access for playback files
+    SmartDashboard.putNumber("P", 0.0005);
+    SmartDashboard.putNumber("I",0);
+    SmartDashboard.putNumber("D",0);
     File[] files = RecordPlaybackConstants.kRecordDirectory.listFiles();
     for (int i = 0; i < files.length; i++) {
       fileChooser.addOption(files[i].getName(), files[i]);
@@ -146,6 +150,7 @@ public class RobotContainer {
     new JoystickButton(leftStick, 6).onTrue(cancelAll);
     new JoystickButton(leftStick, 7).onTrue(cancelAll);
     // Disabled to prevent accidentally playback. If testing, use autonomous period of FRC Drive Station.
+    
     //new JoystickButton(rightStick, 7).onTrue(playBackAuto);
 
     new JoystickButton(leftStick, 1).whileTrue(new OnboarderSystem(onboarder, m_operatorController, true, true));
@@ -156,9 +161,11 @@ public class RobotContainer {
     // Lambdas that don't need a command
     new JoystickButton(leftStick, 10).onTrue(new InstantCommand(() -> {
       m_robotDrive.resetGyro();
+      m_robotDrive.setChosenAngle(0);
     }));
     new JoystickButton(leftStick, 11).onTrue(new InstantCommand(() -> {
           m_robotDrive.resetGyro();
+          m_robotDrive.setChosenAngle(0);
     }));
     new JoystickButton(leftStick, 8).onTrue(new InstantCommand(() -> {
           ampSystem.enableMotor();
