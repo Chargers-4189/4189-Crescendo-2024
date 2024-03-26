@@ -80,7 +80,7 @@ public class PlayBack extends Command {
       MathUtil.applyDeadband(controlLeftY, OIConstants.kDriveDeadband),
       MathUtil.applyDeadband(controlLeftX, OIConstants.kDriveDeadband),
       MathUtil.applyDeadband(controlRightX, OIConstants.kDriveDeadband),
-      true, true
+      false, true
     );
     onboarder.setOnboarder(-onboarderSpeed);
     shooter.setShooter(shooterSpeed);
