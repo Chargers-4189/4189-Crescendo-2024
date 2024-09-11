@@ -21,7 +21,7 @@ public class SwerveJoysticks extends PIDCommand {
   public SwerveJoysticks(DriveSubsystem swerve, Joystick leftStick, Joystick rightStick) {
     super(
         // The controller that the command will use
-        new PIDController(.02, 0,.000),
+        new PIDController(.02, .00,.000),
         // This should return the measurement
         () -> swerve.getAngle(),
         // This should return the setpoint (can also be a constant)
@@ -30,25 +30,31 @@ public class SwerveJoysticks extends PIDCommand {
         output -> {
           double xSpeed = MathUtil.applyDeadband(leftStick.getY(), OIConstants.kDriveDeadband);
           double ySpeed = MathUtil.applyDeadband(leftStick.getX(), OIConstants.kDriveDeadband);
-          double rotationSpeed = MathUtil.applyDeadband(rightStick.getX(), OIConstants.kDriveDeadband);
-          if(Math.abs(rotationSpeed)> 0.1){        
-            swerve.setChosenAngle(Math.atan2(-rightStick.getY(), rightStick.getX()) * 360 / (2*Math.PI));
-          } 
+          double rotationSpeed = MathUtil.applyDeadband(-rightStick.getX(), OIConstants.kDriveDeadband);
+          /*
+          if(Math.abs(rotationSpeed)> 0.1){
+            swerve.setChosenAngle(swerve.getChosenAngle() + rotationSpeed * Constants.DriveConstants.HeadingTurnRate);
+          }
+          */
+          //swerve.setChosenAngle(Math.atan2(rightStick.getY(), rightStick.getX()) * 360 / (2*Math.PI));
+          
           
           //.println("GET Y: " + -rightStick.getY() + " GET X: " + rightStick.getX());
-          System.out.println(Math.atan2(-rightStick.getY(), rightStick.getX()) * 360 / (2*Math.PI));
+          //System.out.println(Math.atan2(rightStick.getY(), rightStick.getX()) * 360 / (2*Math.PI));
           
           // Use the output here
+          /*
           swerve.drive(xSpeed, ySpeed, -output, true, true);
           SmartDashboard.putNumber("Angle", swerve.getAngle());
           SmartDashboard.putNumber("Chossen Angle", swerve.getChosenAngle());
-          /*
+          */
+          
           if(xSpeed == 0 && ySpeed==0 && rotationSpeed == 0){
             swerve.setX();
           } else {
-            swerve.drive(xSpeed, ySpeed, rotationSpeed, true, true);
+            swerve.drive(0.10 * xSpeed, 0.10 * ySpeed, 0.10 * rotationSpeed, true, true);
           }
-          */
+          
         });
         //absolute angle is tan inverse
         addRequirements(swerve);
