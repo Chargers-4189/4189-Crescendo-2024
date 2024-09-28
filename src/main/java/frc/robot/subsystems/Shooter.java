@@ -18,7 +18,7 @@ public class Shooter extends SubsystemBase {
   public Shooter() {}
 
   public void setShooter(double power) {
-    power = power * 8.5;
+    power = power * 9.0;
     double powerTop = power + 2;
     double powerBottom = power -2;
     if (power != 0) {

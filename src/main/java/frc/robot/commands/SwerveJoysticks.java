@@ -28,9 +28,11 @@ public class SwerveJoysticks extends PIDCommand {
         () -> swerve.getChosenAngle(),
         // This uses the output
         output -> {
+          
           double xSpeed = MathUtil.applyDeadband(leftStick.getY(), OIConstants.kDriveDeadband);
           double ySpeed = MathUtil.applyDeadband(leftStick.getX(), OIConstants.kDriveDeadband);
           double rotationSpeed = MathUtil.applyDeadband(rightStick.getX(), OIConstants.kDriveDeadband);
+          /*
           if(Math.abs(rotationSpeed)> 0.1){        
             swerve.setChosenAngle(Math.atan2(-rightStick.getY(), rightStick.getX()) * 360 / (2*Math.PI));
           } 
@@ -42,13 +44,14 @@ public class SwerveJoysticks extends PIDCommand {
           swerve.drive(xSpeed, ySpeed, -output, true, true);
           SmartDashboard.putNumber("Angle", swerve.getAngle());
           SmartDashboard.putNumber("Chossen Angle", swerve.getChosenAngle());
-          /*
+          */
+          
           if(xSpeed == 0 && ySpeed==0 && rotationSpeed == 0){
             swerve.setX();
           } else {
-            swerve.drive(xSpeed, ySpeed, rotationSpeed, true, true);
+            swerve.drive( 1.0 * xSpeed, 1.0 * ySpeed, 0.8 * rotationSpeed, true, true);
           }
-          */
+          
         });
         //absolute angle is tan inverse
         addRequirements(swerve);
