@@ -34,6 +34,8 @@ public class Shooter extends SubsystemBase {
     this.topMotor.set(-power);
     this.bottomMotor.set(power);
   }
+  public void setTopShooter(double power){this.topMotor.set(-power);}
+  public void setBottomShooter(double power){this.bottomMotor.set(power);}
 
   @Override
   public void periodic() {

@@ -49,7 +49,9 @@ public class AmpOnboard extends Command {
       isFinished = true;
     } else {
       onboarder.setOnboarder(0.5);
-      shooter.setShooterLowPower(Constants.ShooterConstants.kShooterLOWPowerValue);
+      //shooter.setShooterLowPower(Constants.ShooterConstants.kShooterLOWPowerValue);
+      shooter.setTopShooter(0.1);
+      shooter.setBottomShooter(0.02);
       ampSystem.setRoller(-1);
     }
 
