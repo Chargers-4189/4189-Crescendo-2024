@@ -16,8 +16,6 @@ import frc.robot.commands.Auto_PlaceAmp;
 import frc.robot.commands.CancelAll;
 import frc.robot.commands.DisableActuator;
 import frc.robot.commands.DriveAmpSystem;
-import frc.robot.commands.DriveClimbDown;
-import frc.robot.commands.DriveClimbUp;
 import frc.robot.commands.DriveShooter;
 import frc.robot.commands.DriveShooterBackwind;
 import frc.robot.commands.OnboarderSystem;
@@ -67,8 +65,6 @@ public class RobotContainer {
   private CancelAll cancelAll;
   private DriveShooter driveShooter = new DriveShooter(shooter);
   private DriveShooterBackwind driveShooterBackwind = new DriveShooterBackwind(shooter);
-  private DriveClimbUp driveClimbUp = new DriveClimbUp(climb);
-  private DriveClimbDown driveClimbDown = new DriveClimbDown(climb);
   private AutoToggleActuate autoToggleActuate = new AutoToggleActuate(ampSystem);
   private DisableActuator disableActuator = new DisableActuator(ampSystem);
 
@@ -138,15 +134,6 @@ public class RobotContainer {
     m_operatorController.b().onTrue(autoPlaceAmp);
     m_operatorController.a().onTrue(autoOnboardAmp);
     m_operatorController.y().onTrue(autoOffboardAmp);
-
-    // Manual Control
-    // WARNING: Manual Onboarder override is located in OnboarderSystem.java (Default Command)
-    m_operatorController.povUp().whileTrue(driveClimbUp);
-    m_operatorController.povUpLeft().whileTrue(driveClimbUp);
-    m_operatorController.povUpRight().whileTrue(driveClimbUp);
-    m_operatorController.povDown().whileTrue(driveClimbDown);
-    m_operatorController.povDownLeft().whileTrue(driveClimbDown);
-    m_operatorController.povDownRight().whileTrue(driveClimbDown);
 
     // DRIVER BUTTONS
     //playBackAuto = new PlayBack(m_robotDrive, onboarder, shooter, fileChooser, alliancebox);

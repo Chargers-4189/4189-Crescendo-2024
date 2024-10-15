@@ -43,7 +43,6 @@ public class CancelAll extends Command {
   public void execute() {
     onboarder.setOnboarder(0.01);
     shooter.setShooter(0.01);
-    climb.setClimb(0.01);
     swerve.drive(
       0.01,
       0.01,
@@ -62,7 +61,6 @@ public class CancelAll extends Command {
   public void end(boolean interrupted) {
     onboarder.setOnboarder(0);
     shooter.setShooter(0);
-    climb.setClimb(0);
     swerve.drive(
       0,
       0,
