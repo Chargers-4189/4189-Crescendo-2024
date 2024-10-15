@@ -124,6 +124,9 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    //FSM Rewrites
+    configureClimberStateMachine();
+
     // OPERATOR BUTTONS
     cancelAll = new CancelAll(m_robotDrive, onboarder, shooter, climb, ampSystem);
     m_operatorController.back().onTrue(cancelAll);
@@ -179,6 +182,18 @@ public class RobotContainer {
     new JoystickButton(rightStick, 9).onTrue(new InstantCommand(() -> {
           ampSystem.resetEncoder();
     }));
+  }
+
+  private void configureClimberStateMachine() {
+    Trigger moveUp = new Trigger(() -> climb.getRestSensor() == false && m_operatorController.povUp().getAsBoolean());
+    Trigger moveDown = new Trigger(() -> climb.getExtendedSensor() == false && m_operatorController.povDown().getAsBoolean());
+    Trigger idleUp = new Trigger(() -> climb.getRestSensor() == true || m_operatorController.povUp().getAsBoolean() == false);
+    Trigger idleDown = new Trigger(() -> climb.getExtendedSensor() == true || m_operatorController.povDown().getAsBoolean() == false);
+    
+    moveUp.onTrue(climb.driveClimb(1));
+    moveDown.onTrue(climb.driveClimb(-1));
+    idleUp.onTrue(climb.driveClimb(0));
+    idleDown.onTrue(climb.driveClimb(0));
   }
 
   /**
