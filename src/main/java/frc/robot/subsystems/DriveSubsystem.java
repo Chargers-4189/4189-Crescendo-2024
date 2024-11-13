@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -60,7 +61,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   private double chosenHeading = 0;
   // Odometry class for tracking robot pose
-  SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
+  SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
       DriveConstants.kDriveKinematics,
       Rotation2d.fromDegrees(-m_gyro.getAngle()),
       new SwerveModulePosition[] {
@@ -68,7 +69,7 @@ public class DriveSubsystem extends SubsystemBase {
           m_frontRight.getPosition(),
           m_rearLeft.getPosition(),
           m_rearRight.getPosition()
-      });
+      }, new Pose2d());
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
@@ -99,7 +100,11 @@ public class DriveSubsystem extends SubsystemBase {
    * @return The pose.
    */
   public Pose2d getPose() {
-    return m_odometry.getPoseMeters();
+    return m_odometry.getEstimatedPosition();
+  }
+
+  public void addVisionMeasurements(Pose2d visionRobotPoseMeters, double timestampSeconds){
+    m_odometry.addVisionMeasurement(visionRobotPoseMeters, timestampSeconds);
   }
 
 
