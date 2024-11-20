@@ -3,7 +3,11 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
+import frc.robot.Constants;
 
+import java.util.Optional;
+
+import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
@@ -15,20 +19,23 @@ import org.photonvision.simulation.VisionSystemSim;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+
 
 public class vision extends SubsystemBase {
   /** Creates a new vision. */
   public VisionSystemSim visionSimField = new VisionSystemSim("main");
   public PhotonCamera camera = new PhotonCamera("HelloCam");
   public PhotonPoseEstimator poseEstimator;
-
+  public EstimatedRobotPose estimatedPose;
+  public Pose3d robotPose = new Pose3d();
+  
   public vision() {
     Rotation3d robotToCamerRot = new Rotation3d(0, Math.toRadians(-15), 0);
     Transform3d robotToCamera = new Transform3d(new Translation3d(0,0,0),robotToCamerRot);
@@ -50,32 +57,40 @@ public class vision extends SubsystemBase {
     // Add the simulated camera to view the targets on this simulated field.
 
     visionSimField.addCamera(cameraSim, robotToCamera);
-c
+
+    cameraSim.enableRawStream(true);
     cameraSim.enableDrawWireframe(true);
   
   }
 
-  public Pose2d update() {
+  public void update() {
     var results = camera.getAllUnreadResults();
 
     if (!results.isEmpty()) {
       // Camera processed a new frame since last
       // Get the last one in the list.
       var result = results.get(results.size() - 1);
-      if (result.hasTargets()) {
-          // At least one AprilTag was seen by the camera
-          var target = result.getBestTarget();
-          target.altCameraToTarget()
-          Transform3d fieldToCamera = result.getMultiTagResult().estimatedPose.best;
-
-          return robotPose;
+      if (result.hasTargets()) { 
+          var estimatedResult = poseEstimator.update(result);
+          if(estimatedResult.isPresent()){
+            estimatedPose = estimatedResult.get();
+            //System.out.println(estimatedPose.estimatedPose);
+          }
+        }
+          //return robotPose;
       }
     }
+
+  public Pose3d getEstimatedRobotPose(){
+    if (estimatedPose != null) {
+      robotPose = estimatedPose.estimatedPose;
+    }
+    return robotPose;
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    visionSimField.update(this.getEstimatedRobotPose());
+    this.update();
   }
-
 }

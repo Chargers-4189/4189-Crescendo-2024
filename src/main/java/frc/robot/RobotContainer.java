@@ -10,6 +10,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.SwerveJoysticks;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.vision;
 
 import java.util.List;
 
@@ -37,6 +38,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  private final vision vision = new vision();
 
   // The driver's controller
   XboxController m_operatorController = new XboxController(OIConstants.kDriverControllerPort);
